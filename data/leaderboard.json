@@ -1,0 +1,218 @@
+{
+  "updated": "2026-06-15",
+  "defaultTask": "overall",
+  "defaultMetric": "mean_test_pass",
+  "metrics": [
+    {
+      "id": "mean_test_pass",
+      "label": "Mean Test Pass@1",
+      "shortLabel": "Mean Test",
+      "description": "Fraction of task-specific unit tests passed by one generated solution."
+    },
+    {
+      "id": "suite_pass",
+      "label": "Suite Pass@1",
+      "shortLabel": "Suite",
+      "description": "Strict single-turn score: all unit tests for the task must pass."
+    },
+    {
+      "id": "episode_pass",
+      "label": "Episode Pass@1",
+      "shortLabel": "Episode",
+      "description": "Strict multi-turn score: every turn in the episode must be fully solved."
+    },
+    {
+      "id": "turn_suite_pass",
+      "label": "Turn Suite Pass@1",
+      "shortLabel": "Turn Suite",
+      "description": "Multi-turn score: fraction of turns whose full unit-test suite passed."
+    }
+  ],
+  "tasks": [
+    {
+      "id": "overall",
+      "label": "Overall",
+      "shortLabel": "Overall",
+      "description": "Aggregate PLSQLBENCH score across the released task families.",
+      "instances": 4242,
+      "unit": "instances",
+      "databaseCount": 359,
+      "averageTests": 6.2,
+      "primaryMetric": "mean_test_pass"
+    },
+    {
+      "id": "spider2_st",
+      "label": "Spider2-PLSQL ST",
+      "shortLabel": "Spider2-ST",
+      "description": "Single-turn schema-grounded PL/SQL tasks adapted from Spider 2.0 Lite.",
+      "instances": 1116,
+      "unit": "turns",
+      "databaseCount": 158,
+      "averageColumns": 803.6,
+      "averageTests": 5.2,
+      "primaryMetric": "mean_test_pass"
+    },
+    {
+      "id": "spider2_mt",
+      "label": "Spider2-PLSQL MT",
+      "shortLabel": "Spider2-MT",
+      "description": "Multi-turn interactive workflows requiring incremental modification, debugging, and repair.",
+      "instances": 1202,
+      "turns": 4516,
+      "unit": "conversations",
+      "databaseCount": 158,
+      "averageColumns": 803.6,
+      "averageTests": 15.1,
+      "primaryMetric": "mean_test_pass"
+    },
+    {
+      "id": "spider",
+      "label": "Spider-PLSQL",
+      "shortLabel": "Spider",
+      "description": "Spider 1.0 SQL tasks converted into executable Oracle PL/SQL blocks.",
+      "instances": 970,
+      "unit": "questions",
+      "databaseCount": 199,
+      "averageColumns": 25.7,
+      "averageTests": 1,
+      "primaryMetric": "mean_test_pass"
+    },
+    {
+      "id": "stack",
+      "label": "Stack-PLSQL",
+      "shortLabel": "Stack",
+      "description": "Curated procedural snippets normalized into executable schema-grounded PL/SQL tasks.",
+      "instances": 92,
+      "unit": "questions",
+      "databaseCount": 1,
+      "averageColumns": 1714,
+      "averageTests": 2.8,
+      "primaryMetric": "mean_test_pass"
+    },
+    {
+      "id": "mbpp",
+      "label": "MBPP-PLSQL",
+      "shortLabel": "MBPP",
+      "description": "MBPP-derived function and procedure generation tasks translated into Oracle PL/SQL.",
+      "instances": 823,
+      "unit": "prompts",
+      "databaseCount": null,
+      "averageColumns": null,
+      "averageTests": 1,
+      "primaryMetric": "mean_test_pass"
+    },
+    {
+      "id": "re40",
+      "label": "RE40",
+      "shortLabel": "RE40",
+      "description": "Readonly enterprise-style database questions with standardized PL/SQL prompts.",
+      "instances": 39,
+      "unit": "questions",
+      "databaseCount": 1,
+      "averageColumns": null,
+      "averageTests": null,
+      "primaryMetric": "mean_test_pass"
+    }
+  ],
+  "entries": [
+    {
+      "method": "Llama-4-Maverick",
+      "organization": "Open-weight baseline",
+      "category": "Open-weight",
+      "date": "2026-06-15",
+      "setting": "Model",
+      "link": "",
+      "scores": {}
+    },
+    {
+      "method": "GPT-OSS-20B",
+      "organization": "Open-weight baseline",
+      "category": "Open-weight",
+      "date": "2026-06-15",
+      "setting": "Model",
+      "link": "",
+      "scores": {}
+    },
+    {
+      "method": "GPT-OSS-120B",
+      "organization": "Open-weight baseline",
+      "category": "Open-weight",
+      "date": "2026-06-15",
+      "setting": "Model",
+      "link": "",
+      "scores": {}
+    },
+    {
+      "method": "Gemma-4-31B",
+      "organization": "Open-weight baseline",
+      "category": "Open-weight",
+      "date": "2026-06-15",
+      "setting": "Model",
+      "link": "",
+      "scores": {}
+    },
+    {
+      "method": "Gemini-2.5-Flash-Lite",
+      "organization": "Proprietary baseline",
+      "category": "Proprietary",
+      "date": "2026-06-15",
+      "setting": "Model",
+      "link": "",
+      "scores": {}
+    },
+    {
+      "method": "Gemini-2.5-Pro",
+      "organization": "Proprietary baseline",
+      "category": "Proprietary",
+      "date": "2026-06-15",
+      "setting": "Model",
+      "link": "",
+      "scores": {}
+    },
+    {
+      "method": "GPT-4.1 Mini",
+      "organization": "Proprietary baseline",
+      "category": "Proprietary",
+      "date": "2026-06-15",
+      "setting": "Model",
+      "link": "",
+      "scores": {}
+    },
+    {
+      "method": "GPT-4.1",
+      "organization": "Proprietary baseline",
+      "category": "Proprietary",
+      "date": "2026-06-15",
+      "setting": "Model",
+      "link": "",
+      "scores": {}
+    },
+    {
+      "method": "GPT-5.4",
+      "organization": "Proprietary baseline",
+      "category": "Proprietary",
+      "date": "2026-06-15",
+      "setting": "Model",
+      "link": "",
+      "scores": {}
+    },
+    {
+      "method": "GPT-5.5",
+      "organization": "Proprietary baseline",
+      "category": "Proprietary",
+      "date": "2026-06-15",
+      "setting": "Model",
+      "link": "",
+      "scores": {}
+    },
+    {
+      "method": "Grok-4.3",
+      "organization": "Proprietary baseline",
+      "category": "Proprietary",
+      "date": "2026-06-15",
+      "setting": "Model",
+      "link": "",
+      "scores": {}
+    }
+  ]
+}

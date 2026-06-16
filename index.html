@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="PLSQLBENCH leaderboard for procedural database programming over enterprise schemas.">
+    <title>PLSQLBENCH Leaderboard</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23ffffff'/%3E%3Crect x='6' y='6' width='52' height='52' rx='10' fill='none' stroke='%2316211f' stroke-width='4'/%3E%3Ctext x='32' y='39' text-anchor='middle' font-family='Arial,sans-serif' font-size='22' font-weight='700' fill='%2316211f'%3EPL%3C/text%3E%3C/svg%3E">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav-shell" aria-label="Primary navigation">
+        <a class="brand" href="#top" aria-label="PLSQLBENCH home">
+          <span class="brand-mark" aria-hidden="true">PL</span>
+          <span>PLSQLBENCH</span>
+        </a>
+        <div class="nav-links">
+          <a href="#leaderboard">Leaderboard</a>
+          <a href="#benchmark">Benchmark</a>
+          <a href="#submission">Submit</a>
+          <a href="#citation">Citation</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero section-band" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Execution-based procedural database programming benchmark</p>
+          <h1 id="hero-title">PLSQLBENCH</h1>
+          <p class="lede">
+            Evaluating language models on executable PL/SQL programs over enterprise-style schemas,
+            from single-turn generation to multi-turn debugging and repair.
+          </p>
+          <div class="hero-actions" aria-label="Project links">
+            <a class="button primary" href="#benchmark">
+              <i data-lucide="book-open" aria-hidden="true"></i>
+              <span>Benchmark</span>
+            </a>
+            <a class="button" href="https://github.com/plsqlbench/plsqlbench.github.io" target="_blank" rel="noreferrer">
+              <i data-lucide="github" aria-hidden="true"></i>
+              <span>Code</span>
+            </a>
+            <a class="button" href="#submission">
+              <i data-lucide="send" aria-hidden="true"></i>
+              <span>Submit</span>
+            </a>
+          </div>
+          <div class="stat-strip" aria-label="Benchmark summary">
+            <div>
+              <strong>4,242</strong>
+              <span>instances</span>
+            </div>
+            <div>
+              <strong>7,556</strong>
+              <span>user turns</span>
+            </div>
+            <div>
+              <strong>359</strong>
+              <span>databases</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="leaderboard-preview" aria-labelledby="preview-title">
+          <div class="preview-header">
+            <div>
+              <p class="eyebrow">Live table</p>
+              <h2 id="preview-title">Task-Specific Ranking</h2>
+            </div>
+            <span class="status-pill">Awaiting official scores</span>
+          </div>
+          <div class="preview-grid" aria-hidden="true">
+            <div class="pipeline-node source">Prompt</div>
+            <div class="pipeline-node schema">Schema</div>
+            <div class="pipeline-node program">PL/SQL</div>
+            <div class="pipeline-node tests">Unit tests</div>
+          </div>
+          <p class="preview-note">
+            Pick a task family and metric below. Numeric scores in <code>docs/data/leaderboard.json</code>
+            are ranked automatically.
+          </p>
+        </aside>
+      </section>
+
+      <section id="leaderboard" class="section-band leaderboard-section" aria-labelledby="leaderboard-title">
+        <div class="section-heading">
+          <p class="eyebrow">Leaderboard</p>
+          <h2 id="leaderboard-title">Task-Specific Rankings</h2>
+          <p>
+            The table follows the FDABench task-filter pattern and Spider 2.0 setting-specific ranking pattern.
+            Scores are shown only after official validation.
+          </p>
+        </div>
+
+        <div class="controls" aria-label="Leaderboard filters">
+          <div class="control-group">
+            <span>Task</span>
+            <div id="task-tabs" class="segmented" role="tablist" aria-label="Task family"></div>
+          </div>
+          <div class="control-group compact">
+            <span>Metric</span>
+            <select id="metric-select" aria-label="Metric"></select>
+          </div>
+          <div class="control-group compact">
+            <span>Compare</span>
+            <select id="category-select" aria-label="Model category">
+              <option value="all">All entries</option>
+              <option value="Open-weight">Open-weight</option>
+              <option value="Proprietary">Proprietary</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="task-summary" id="task-summary" aria-live="polite"></div>
+
+        <div class="table-tool">
+          <div class="table-meta">
+            <span id="table-caption">Loading leaderboard...</span>
+            <span id="updated-label"></span>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Rank</th>
+                  <th scope="col">Method</th>
+                  <th scope="col">Category</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Score</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody id="leaderboard-body">
+                <tr>
+                  <td colspan="6">Loading...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="benchmark" class="section-band benchmark-section" aria-labelledby="benchmark-title">
+        <div class="section-heading">
+          <p class="eyebrow">Why it matters</p>
+          <h2 id="benchmark-title">A Missing Layer Between Code Generation and Text-to-SQL</h2>
+          <p>
+            Production database work is not only standalone SQL. It includes reusable database-resident
+            programs that validate records, coordinate transactions, handle exceptions, and run scheduled jobs.
+          </p>
+        </div>
+
+        <div class="reason-grid">
+          <article class="reason-item">
+            <i data-lucide="database-zap" aria-hidden="true"></i>
+            <h3>Executable database programs</h3>
+            <p>
+              PLSQLBENCH evaluates stored procedures, functions, packages, triggers, cursors,
+              object types, dynamic SQL, and transaction logic.
+            </p>
+          </article>
+          <article class="reason-item">
+            <i data-lucide="network" aria-hidden="true"></i>
+            <h3>Not Oracle-only as a problem class</h3>
+            <p>
+              Procedural SQL equivalents exist across major platforms, including BigQuery scripting,
+              Snowflake Scripting, PL/pgSQL, and Transact-SQL.
+            </p>
+          </article>
+          <article class="reason-item">
+            <i data-lucide="messages-square" aria-hidden="true"></i>
+            <h3>Multi-turn enterprise workflows</h3>
+            <p>
+              Later turns add requirements, repair failures, or change business rules while preserving
+              earlier behavior and names.
+            </p>
+          </article>
+        </div>
+
+        <div class="dataset-table">
+          <div class="table-meta">
+            <span>Dataset composition</span>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Subset</th>
+                  <th scope="col">Instances</th>
+                  <th scope="col">Databases</th>
+                  <th scope="col">Avg. tests</th>
+                  <th scope="col">Focus</th>
+                </tr>
+              </thead>
+              <tbody id="dataset-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-band protocol-section" aria-labelledby="protocol-title">
+        <div class="section-heading">
+          <p class="eyebrow">Evaluation</p>
+          <h2 id="protocol-title">Execution-Based Protocol</h2>
+        </div>
+
+        <div class="protocol-layout">
+          <div class="protocol-step">
+            <span>1</span>
+            <h3>Generate PL/SQL</h3>
+            <p>Models receive a natural-language request and Oracle-dialect schema context.</p>
+          </div>
+          <div class="protocol-step">
+            <span>2</span>
+            <h3>Compile and run</h3>
+            <p>Generated artifacts are executed against benchmark schemas in Oracle Autonomous Database.</p>
+          </div>
+          <div class="protocol-step">
+            <span>3</span>
+            <h3>Score tests</h3>
+            <p>Unit tests compare outputs, table-state changes, exceptions, and diagnostic messages.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="submission" class="section-band submission-section" aria-labelledby="submission-title">
+        <div class="section-heading">
+          <p class="eyebrow">Submission</p>
+          <h2 id="submission-title">Submission Format</h2>
+          <p>
+            Submit one JSONL row per generated answer. Include model metadata, task identifiers,
+            generated PL/SQL, and optional run telemetry.
+          </p>
+        </div>
+
+        <pre class="code-block"><code>{"instance_id":"spider2_singleturn_0001","model":"your-system","generated_plsql":"CREATE OR REPLACE PROCEDURE ...","latency_seconds":8.5,"total_tokens":3200}
+{"conversation_id":"plsql-multiturn-0732","turn_index":2,"model":"your-system","generated_plsql":"CREATE OR REPLACE PACKAGE ...","latency_seconds":12.1}</code></pre>
+      </section>
+
+      <section id="citation" class="section-band citation-section" aria-labelledby="citation-title">
+        <div class="section-heading">
+          <p class="eyebrow">Citation</p>
+          <h2 id="citation-title">Cite PLSQLBENCH</h2>
+        </div>
+        <pre class="code-block"><code>@inproceedings{plsqlbench2026,
+  title = {PLSQLBENCH: Benchmarking Procedural Database Programming over Enterprise Schemas},
+  author = {Anonymous},
+  booktitle = {EMNLP Industry Track},
+  year = {2026}
+}</code></pre>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>PLSQLBENCH</span>
+      <span>Execution-based PL/SQL benchmark</span>
+    </footer>
+  </body>
+</html>
