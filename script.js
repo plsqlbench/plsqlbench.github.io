@@ -3,6 +3,36 @@ const state = {
   metricId: "mean_test_pass"
 };
 
+const leaderboardDataUrl = "data/leaderboard.json?v=20260617";
+
+const loadLeaderboardDataSync = () => {
+  if (typeof XMLHttpRequest === "undefined") {
+    return null;
+  }
+
+  try {
+    const request = new XMLHttpRequest();
+    request.open("GET", leaderboardDataUrl, false);
+    request.send(null);
+
+    if ((request.status >= 200 && request.status < 300) || request.status === 0) {
+      return JSON.parse(request.responseText);
+    }
+  } catch (error) {
+    console.warn("Synchronous leaderboard load failed; falling back to fetch.", error);
+  }
+
+  return null;
+};
+
+const loadLeaderboardData = async () => {
+  const response = await fetch(leaderboardDataUrl);
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+  return response.json();
+};
+
 const formatNumber = (value) => {
   if (value === null || value === undefined || Number.isNaN(Number(value))) {
     return "n/a";
@@ -207,11 +237,9 @@ const render = () => {
   renderLeaderboard();
 };
 
-const init = async () => {
-  const response = await fetch("data/leaderboard.json?v=20260616");
-  state.data = await response.json();
-  state.metricId = state.data.defaultMetric;
-
+const hydrate = (data) => {
+  state.data = data;
+  state.metricId = data.defaultMetric;
   renderMetricSelect();
   renderDatasetTable();
   render();
@@ -221,9 +249,23 @@ const init = async () => {
   }
 };
 
-init().catch((error) => {
+const showLoadError = (error) => {
   const body = document.querySelector("#leaderboard-body");
   const updated = document.querySelector("#updated-label");
   updated.textContent = "Load failed";
   body.innerHTML = `<tr><td>Failed to load leaderboard data: ${escapeHtml(error.message)}</td></tr>`;
-});
+};
+
+const init = () => {
+  const syncData = loadLeaderboardDataSync();
+  if (syncData) {
+    hydrate(syncData);
+    return;
+  }
+
+  loadLeaderboardData()
+    .then(hydrate)
+    .catch(showLoadError);
+};
+
+init();

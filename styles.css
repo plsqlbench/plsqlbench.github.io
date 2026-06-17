@@ -462,12 +462,13 @@ table {
 }
 
 .leaderboard-table {
-  min-width: 920px;
+  min-width: 720px;
+  table-layout: fixed;
 }
 
 th,
 td {
-  padding: 12px 14px;
+  padding: 10px 8px;
   border-bottom: 1px solid var(--line);
   text-align: left;
   vertical-align: middle;
@@ -486,28 +487,34 @@ tbody tr:last-child td {
 }
 
 .rank-cell {
-  width: 84px;
+  width: 54px;
   text-align: center;
 }
 
 .leaderboard-table th:first-child {
-  width: 76px;
+  width: 54px;
   text-align: center;
+}
+
+.leaderboard-table th:nth-child(2),
+.method-cell {
+  width: 190px;
 }
 
 .leaderboard-table th:not(:first-child):not(:nth-child(2)),
 .score-number {
-  width: 104px;
+  width: 74px;
   text-align: right;
 }
 
 .rank-cell strong {
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .method-cell strong {
   display: block;
   font-size: 15px;
+  overflow-wrap: anywhere;
 }
 
 .method-cell span {
@@ -518,7 +525,7 @@ tbody tr:last-child td {
 
 .score-number {
   font-variant-numeric: tabular-nums;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 900;
 }
 
