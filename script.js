@@ -1,18 +1,39 @@
 const state = {
   data: null,
-  taskId: "overall",
-  metricId: "mean_test_pass",
-  category: "all"
+  metricId: "mean_test_pass"
 };
 
 const formatNumber = (value) => {
   if (value === null || value === undefined || Number.isNaN(Number(value))) {
     return "n/a";
   }
+
   return Number(value).toLocaleString("en-US", {
     maximumFractionDigits: 1
   });
 };
+
+const normalizeScore = (value) => {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) {
+    return 0;
+  }
+
+  return numericValue <= 1 ? numericValue * 100 : numericValue;
+};
+
+const formatScore = (value) => normalizeScore(value).toLocaleString("en-US", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2
+});
+
+const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#39;"
+}[character]));
 
 const getScore = (entry, taskId, metricId) => {
   const taskScores = entry.scores?.[taskId];
@@ -20,11 +41,20 @@ const getScore = (entry, taskId, metricId) => {
   return typeof value === "number" ? value : null;
 };
 
-const rankEntries = (entries, taskId, metricId) => {
+const getTaskColumns = () => state.data.tasks;
+
+const getSortTaskId = () => (
+  state.metricId === "episode_pass" || state.metricId === "turn_suite_pass"
+    ? "spider2_mt"
+    : state.data.defaultTask
+);
+
+const rankEntries = (entries, metricId) => {
+  const sortTaskId = getSortTaskId();
   const rows = entries.map((entry, index) => ({
     entry,
     index,
-    score: getScore(entry, taskId, metricId),
+    score: getScore(entry, sortTaskId, metricId),
     rank: null
   }));
 
@@ -49,23 +79,7 @@ const rankEntries = (entries, taskId, metricId) => {
   return [...scored, ...pending];
 };
 
-const renderTabs = () => {
-  const tabs = document.querySelector("#task-tabs");
-  tabs.innerHTML = "";
-
-  state.data.tasks.forEach((task) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.role = "tab";
-    button.textContent = task.shortLabel;
-    button.setAttribute("aria-selected", String(task.id === state.taskId));
-    button.addEventListener("click", () => {
-      state.taskId = task.id;
-      render();
-    });
-    tabs.appendChild(button);
-  });
-};
+const getSelectedMetric = () => state.data.metrics.find((item) => item.id === state.metricId);
 
 const renderMetricSelect = () => {
   const select = document.querySelector("#metric-select");
@@ -85,87 +99,90 @@ const renderMetricSelect = () => {
   });
 };
 
-const renderCategorySelect = () => {
-  const select = document.querySelector("#category-select");
-  select.value = state.category;
-  select.addEventListener("change", (event) => {
-    state.category = event.target.value;
-    render();
-  });
-};
-
 const renderTaskSummary = () => {
-  const task = state.data.tasks.find((item) => item.id === state.taskId);
-  const metric = state.data.metrics.find((item) => item.id === state.metricId);
+  const overall = state.data.tasks.find((item) => item.id === state.data.defaultTask);
   const summary = document.querySelector("#task-summary");
+  const note = document.querySelector("#task-note");
 
   const items = [
-    ["Task family", task.label],
-    ["Scale", `${formatNumber(task.instances)} ${task.unit}`],
-    ["Databases", task.databaseCount === null ? "n/a" : formatNumber(task.databaseCount)],
-    ["Metric", metric.shortLabel]
+    ["Instances", formatNumber(overall.instances), overall.unit],
+    ["Datasets", formatNumber(state.data.tasks.length - 1), "reported columns"],
+    ["Databases", formatNumber(overall.databaseCount), "schemas"],
+    ["Entries", formatNumber(state.data.entries.length), "methods"]
   ];
 
-  if (task.turns) {
-    items[1] = ["Scale", `${formatNumber(task.instances)} conversations / ${formatNumber(task.turns)} turns`];
-  }
-
   summary.innerHTML = items
-    .map(([label, value]) => (
-      `<div class="summary-item"><span>${label}</span><strong>${value}</strong></div>`
+    .map(([label, value, detail]) => (
+      `<div class="summary-item"><span>${label}</span><strong>${value}</strong><small>${detail}</small></div>`
     ))
     .join("");
+
+  note.textContent = "Scores are percentages from the paper: Table 2 for Mean Test Pass@1, Table 5 for single-turn Suite Pass@1, and Table 6 for Spider2-MT strict metrics.";
 };
 
 const renderLeaderboard = () => {
-  const task = state.data.tasks.find((item) => item.id === state.taskId);
-  const metric = state.data.metrics.find((item) => item.id === state.metricId);
+  const metric = getSelectedMetric();
+  const columns = getTaskColumns();
+  const head = document.querySelector("#leaderboard-head");
   const body = document.querySelector("#leaderboard-body");
   const caption = document.querySelector("#table-caption");
   const updated = document.querySelector("#updated-label");
 
-  const visibleEntries = state.data.entries.filter((entry) => (
-    state.category === "all" || entry.category === state.category
-  ));
-
-  const ranked = rankEntries(visibleEntries, state.taskId, state.metricId);
+  const ranked = rankEntries(state.data.entries, state.metricId);
   const scoredCount = ranked.filter((row) => row.score !== null).length;
+  const columnBestScores = Object.fromEntries(columns.map((task) => [
+    task.id,
+    Math.max(...state.data.entries.map((entry) => getScore(entry, task.id, state.metricId) ?? -Infinity))
+  ]));
 
-  caption.textContent = `${task.label} ranked by ${metric.label}`;
-  updated.textContent = `Updated ${state.data.updated}`;
+  const rankBasis = columns.find((task) => task.id === getSortTaskId())?.shortLabel ?? "Overall";
+  caption.textContent = `${metric.label} by dataset (%)`;
+  updated.textContent = `${scoredCount}/${ranked.length} ranked by ${rankBasis}`;
+
+  head.innerHTML = `
+    <tr>
+      <th scope="col">Rank</th>
+      <th scope="col">Model</th>
+      ${columns.map((task) => `<th scope="col">${escapeHtml(task.shortLabel)}</th>`).join("")}
+    </tr>
+  `;
 
   if (!ranked.length) {
-    body.innerHTML = '<tr><td colspan="6">No entries match this filter.</td></tr>';
+    body.innerHTML = `<tr><td colspan="${columns.length + 2}">No entries yet.</td></tr>`;
     return;
   }
 
   body.innerHTML = ranked.map(({ entry, score, rank }) => {
     const method = entry.link
-      ? `<a href="${entry.link}" target="_blank" rel="noreferrer">${entry.method}</a>`
-      : entry.method;
-    const status = score === null
-      ? '<span class="pending-pill">Pending validation</span>'
-      : '<span class="category-pill">Official</span>';
+      ? `<a href="${escapeHtml(entry.link)}" target="_blank" rel="noreferrer">${escapeHtml(entry.method)}</a>`
+      : escapeHtml(entry.method);
+    const organization = entry.organization || entry.category || "";
     const rankLabel = rank === null ? "-" : rank;
-    const scoreLabel = score === null ? "Pending" : score.toFixed(2);
+    const scoreCells = columns.map((task) => {
+      const taskScore = getScore(entry, task.id, state.metricId);
+      const bestScore = columnBestScores[task.id];
+      const isBest = taskScore !== null && Number.isFinite(bestScore) && taskScore === bestScore;
+      const className = `score-number${isBest ? " is-best" : ""}`;
+      const content = taskScore === null
+        ? '<span class="score-missing">n/a</span>'
+        : formatScore(taskScore);
+      return `<td class="${className}">${content}</td>`;
+    }).join("");
 
     return `
       <tr>
-        <td class="rank-cell">${rankLabel}</td>
+        <td class="rank-cell"><strong>${rankLabel}</strong></td>
         <td class="method-cell">
           <strong>${method}</strong>
-          <span>${entry.organization}</span>
+          <span>${escapeHtml(organization)}</span>
         </td>
-        <td><span class="category-pill">${entry.category}</span></td>
-        <td>${entry.date}</td>
-        <td class="score-cell">${scoreLabel}</td>
-        <td>${status}</td>
+        ${scoreCells}
       </tr>
     `;
   }).join("");
 
   if (scoredCount === 0) {
-    caption.textContent = `${task.label} ranking is ready; official scores have not been published yet`;
+    caption.textContent = `${metric.label} is not available for the selected leaderboard rows`;
   }
 };
 
@@ -179,26 +196,23 @@ const renderDatasetTable = () => {
         <td>${formatNumber(task.instances)} ${task.turns ? `conversations / ${formatNumber(task.turns)} turns` : task.unit}</td>
         <td>${task.databaseCount === null ? "n/a" : formatNumber(task.databaseCount)}</td>
         <td>${task.averageTests === null ? "n/a" : formatNumber(task.averageTests)}</td>
-        <td class="muted">${task.description}</td>
+        <td>${escapeHtml(task.description)}</td>
       </tr>
     `)
     .join("");
 };
 
 const render = () => {
-  renderTabs();
   renderTaskSummary();
   renderLeaderboard();
 };
 
 const init = async () => {
-  const response = await fetch("data/leaderboard.json");
+  const response = await fetch("data/leaderboard.json?v=20260616");
   state.data = await response.json();
-  state.taskId = state.data.defaultTask;
   state.metricId = state.data.defaultMetric;
 
   renderMetricSelect();
-  renderCategorySelect();
   renderDatasetTable();
   render();
 
@@ -209,5 +223,7 @@ const init = async () => {
 
 init().catch((error) => {
   const body = document.querySelector("#leaderboard-body");
-  body.innerHTML = `<tr><td colspan="6">Failed to load leaderboard data: ${error.message}</td></tr>`;
+  const updated = document.querySelector("#updated-label");
+  updated.textContent = "Load failed";
+  body.innerHTML = `<tr><td>Failed to load leaderboard data: ${escapeHtml(error.message)}</td></tr>`;
 });
