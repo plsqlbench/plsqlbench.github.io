@@ -1,7 +1,7 @@
 {
   "updated": "2026-06-17",
   "defaultSplit": "development",
-  "defaultTask": "mbpp",
+  "defaultTask": "development_overall",
   "defaultMetric": "mean_test_pass",
   "metrics": [
     {
@@ -40,6 +40,18 @@
       "databaseCount": 274,
       "averageColumns": 847.8,
       "averageTests": 5.0,
+      "primaryMetric": "mean_test_pass"
+    },
+    {
+      "id": "development_overall",
+      "label": "Development Overall",
+      "shortLabel": "Overall",
+      "description": "Macro average across the development datasets in Table 1. Metric-specific averages use the development datasets where that metric is reported.",
+      "instances": 3317,
+      "unit": "instances",
+      "databaseCount": 237,
+      "averageColumns": null,
+      "averageTests": 5.8,
       "primaryMetric": "mean_test_pass"
     },
     {
@@ -91,18 +103,6 @@
       "primaryMetric": "mean_test_pass"
     },
     {
-      "id": "spider2_st_test",
-      "label": "Spider2-ST Test",
-      "shortLabel": "S2-ST Test",
-      "description": "Spider2-ST held-out test split from Table 1: single-turn schema-grounded PL/SQL tasks adapted from Spider 2.0 Lite.",
-      "instances": 115,
-      "unit": "instances",
-      "databaseCount": 27,
-      "averageColumns": 803.6,
-      "averageTests": 5.2,
-      "primaryMetric": "mean_test_pass"
-    },
-    {
       "id": "spider2_mt_dev",
       "label": "Spider2-MT Development",
       "shortLabel": "S2-MT Dev",
@@ -112,6 +112,30 @@
       "databaseCount": 29,
       "averageColumns": 803.6,
       "averageTests": 15.1,
+      "primaryMetric": "mean_test_pass"
+    },
+    {
+      "id": "test_overall",
+      "label": "Test Overall",
+      "shortLabel": "Overall",
+      "description": "Macro average across the held-out test datasets in Table 1. Metric-specific averages use the test datasets where that metric is reported.",
+      "instances": 341,
+      "unit": "instances",
+      "databaseCount": 37,
+      "averageColumns": 803.6,
+      "averageTests": 11.8,
+      "primaryMetric": "mean_test_pass"
+    },
+    {
+      "id": "spider2_st_test",
+      "label": "Spider2-ST Test",
+      "shortLabel": "S2-ST Test",
+      "description": "Spider2-ST held-out test split from Table 1: single-turn schema-grounded PL/SQL tasks adapted from Spider 2.0 Lite.",
+      "instances": 115,
+      "unit": "instances",
+      "databaseCount": 27,
+      "averageColumns": 803.6,
+      "averageTests": 5.2,
       "primaryMetric": "mean_test_pass"
     },
     {
@@ -169,6 +193,18 @@
           "mean_test_pass": 47.28,
           "episode_pass": 10.98,
           "turn_suite_pass": 36.0
+        },
+        "development_overall": {
+          "mean_test_pass": 51.24,
+          "suite_pass": 47.79,
+          "episode_pass": 12.46,
+          "turn_suite_pass": 33.77
+        },
+        "test_overall": {
+          "mean_test_pass": 52.33,
+          "suite_pass": 46.09,
+          "episode_pass": 10.98,
+          "turn_suite_pass": 36.0
         }
       }
     },
@@ -211,6 +247,18 @@
         },
         "spider2_mt_test": {
           "mean_test_pass": 58.08,
+          "episode_pass": 13.41,
+          "turn_suite_pass": 44.67
+        },
+        "development_overall": {
+          "mean_test_pass": 45.98,
+          "suite_pass": 41.25,
+          "episode_pass": 11.76,
+          "turn_suite_pass": 37.92
+        },
+        "test_overall": {
+          "mean_test_pass": 54.66,
+          "suite_pass": 42.61,
           "episode_pass": 13.41,
           "turn_suite_pass": 44.67
         }
@@ -257,6 +305,18 @@
           "mean_test_pass": 51.44,
           "episode_pass": 18.29,
           "turn_suite_pass": 39.67
+        },
+        "development_overall": {
+          "mean_test_pass": 51.11,
+          "suite_pass": 47.1,
+          "episode_pass": 11.76,
+          "turn_suite_pass": 30.85
+        },
+        "test_overall": {
+          "mean_test_pass": 51.87,
+          "suite_pass": 39.13,
+          "episode_pass": 18.29,
+          "turn_suite_pass": 39.67
         }
       }
     },
@@ -299,6 +359,18 @@
         },
         "spider2_mt_test": {
           "mean_test_pass": 59.37,
+          "episode_pass": 24.39,
+          "turn_suite_pass": 48.33
+        },
+        "development_overall": {
+          "mean_test_pass": 59.16,
+          "suite_pass": 56.3,
+          "episode_pass": 16.26,
+          "turn_suite_pass": 39.15
+        },
+        "test_overall": {
+          "mean_test_pass": 59.67,
+          "suite_pass": 46.96,
           "episode_pass": 24.39,
           "turn_suite_pass": 48.33
         }
@@ -345,6 +417,18 @@
           "mean_test_pass": 54.34,
           "episode_pass": 18.29,
           "turn_suite_pass": 43.0
+        },
+        "development_overall": {
+          "mean_test_pass": 54.96,
+          "suite_pass": 51.37,
+          "episode_pass": 13.84,
+          "turn_suite_pass": 37.64
+        },
+        "test_overall": {
+          "mean_test_pass": 57.03,
+          "suite_pass": 46.96,
+          "episode_pass": 18.29,
+          "turn_suite_pass": 43.0
         }
       }
     },
@@ -387,6 +471,18 @@
         },
         "spider2_mt_test": {
           "mean_test_pass": 55.74,
+          "episode_pass": 20.73,
+          "turn_suite_pass": 44.67
+        },
+        "development_overall": {
+          "mean_test_pass": 57.91,
+          "suite_pass": 55.06,
+          "episode_pass": 12.46,
+          "turn_suite_pass": 37.45
+        },
+        "test_overall": {
+          "mean_test_pass": 58.08,
+          "suite_pass": 50.43,
           "episode_pass": 20.73,
           "turn_suite_pass": 44.67
         }
@@ -433,6 +529,18 @@
           "mean_test_pass": 65.92,
           "episode_pass": 26.83,
           "turn_suite_pass": 54.33
+        },
+        "development_overall": {
+          "mean_test_pass": 61.92,
+          "suite_pass": 57.83,
+          "episode_pass": 17.65,
+          "turn_suite_pass": 44.15
+        },
+        "test_overall": {
+          "mean_test_pass": 68.58,
+          "suite_pass": 60.87,
+          "episode_pass": 26.83,
+          "turn_suite_pass": 54.33
         }
       }
     },
@@ -475,6 +583,18 @@
         },
         "spider2_mt_test": {
           "mean_test_pass": 63.07,
+          "episode_pass": 23.17,
+          "turn_suite_pass": 50.33
+        },
+        "development_overall": {
+          "mean_test_pass": 59.81,
+          "suite_pass": 56.05,
+          "episode_pass": 17.3,
+          "turn_suite_pass": 42.83
+        },
+        "test_overall": {
+          "mean_test_pass": 62.85,
+          "suite_pass": 52.17,
           "episode_pass": 23.17,
           "turn_suite_pass": 50.33
         }

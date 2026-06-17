@@ -1,11 +1,11 @@
 const state = {
   data: null,
   splitId: "development",
-  taskId: "overall",
+  taskId: "development_overall",
   metricId: "mean_test_pass"
 };
 
-const leaderboardDataUrl = "data/leaderboard.json?v=20260617grouped";
+const leaderboardDataUrl = "data/leaderboard.json?v=20260617splitoverall";
 
 const splitOptions = [
   { id: "development", label: "Development" },
@@ -13,11 +13,13 @@ const splitOptions = [
 ];
 
 const taskPresentation = {
+  development_overall: { splitId: "development", datasetLabel: "Overall" },
   mbpp: { splitId: "development", datasetLabel: "MBPP" },
   spider: { splitId: "development", datasetLabel: "Spider1" },
   stack: { splitId: "development", datasetLabel: "Stack" },
   spider2_st_dev: { splitId: "development", datasetLabel: "Spider2-ST" },
   spider2_mt_dev: { splitId: "development", datasetLabel: "Spider2-MT" },
+  test_overall: { splitId: "test", datasetLabel: "Overall" },
   spider2_st_test: { splitId: "test", datasetLabel: "Spider2-ST" },
   spider2_mt_test: { splitId: "test", datasetLabel: "Spider2-MT" }
 };
@@ -279,7 +281,7 @@ const renderLeaderboard = () => {
 const renderDatasetTable = () => {
   const body = document.querySelector("#dataset-body");
   body.innerHTML = state.data.tasks
-    .filter((task) => task.id !== "overall")
+    .filter((task) => !["overall", "development_overall", "test_overall"].includes(task.id))
     .map((task) => `
       <tr>
         <td><strong>${task.label}</strong></td>
