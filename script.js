@@ -5,7 +5,7 @@ const state = {
   metricId: "mean_test_pass"
 };
 
-const leaderboardDataUrl = "data/leaderboard.json?v=20260617noscored";
+const leaderboardDataUrl = "data/leaderboard.json?v=20260617notable1";
 
 const splitOptions = [
   { id: "development", label: "Development" },
@@ -210,12 +210,12 @@ const renderTaskSummary = () => {
     [task.unit === "conversations" ? "Conversations" : "Instances", formatNumber(task.instances), task.unit],
     ["Databases", task.databaseCount === null ? "n/a" : formatNumber(task.databaseCount), "schemas"],
     ["Avg. Tests", task.averageTests === null ? "n/a" : formatNumber(task.averageTests), "per task"],
-    ["Split", split.label, "Table 1"]
+    ["Split", split.label, ""]
   ];
 
   summary.innerHTML = items
     .map(([label, value, detail]) => (
-      `<div class="summary-item"><span>${label}</span><strong>${value}</strong><small>${detail}</small></div>`
+      `<div class="summary-item"><span>${label}</span><strong>${value}</strong>${detail ? `<small>${detail}</small>` : ""}</div>`
     ))
     .join("");
 
