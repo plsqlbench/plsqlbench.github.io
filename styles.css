@@ -334,7 +334,8 @@ h3 {
 
 .leaderboard-controls {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(150px, 190px) minmax(0, 1fr) minmax(190px, 240px);
+  align-items: end;
   gap: 14px;
   padding: 16px 20px 12px;
 }
@@ -344,12 +345,23 @@ h3 {
 }
 
 .metric-control {
-  justify-self: end;
-  width: min(100%, 300px);
+  justify-self: stretch;
+  width: 100%;
 }
 
+.split-control,
 .dataset-control {
   width: 100%;
+}
+
+.split-control .segmented {
+  overflow-x: visible;
+}
+
+.split-control .segmented button {
+  flex: 1 1 0;
+  justify-content: center;
+  text-align: center;
 }
 
 .control-group > span {
@@ -386,6 +398,7 @@ select {
   flex: 0 0 auto;
   padding: 7px 10px;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .segmented button[aria-selected="true"] {

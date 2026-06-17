@@ -1,6 +1,7 @@
 {
   "updated": "2026-06-17",
-  "defaultTask": "overall",
+  "defaultSplit": "development",
+  "defaultTask": "mbpp",
   "defaultMetric": "mean_test_pass",
   "metrics": [
     {

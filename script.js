@@ -1,10 +1,26 @@
 const state = {
   data: null,
+  splitId: "development",
   taskId: "overall",
   metricId: "mean_test_pass"
 };
 
-const leaderboardDataUrl = "data/leaderboard.json?v=20260617split";
+const leaderboardDataUrl = "data/leaderboard.json?v=20260617grouped";
+
+const splitOptions = [
+  { id: "development", label: "Development" },
+  { id: "test", label: "Test" }
+];
+
+const taskPresentation = {
+  mbpp: { splitId: "development", datasetLabel: "MBPP" },
+  spider: { splitId: "development", datasetLabel: "Spider1" },
+  stack: { splitId: "development", datasetLabel: "Stack" },
+  spider2_st_dev: { splitId: "development", datasetLabel: "Spider2-ST" },
+  spider2_mt_dev: { splitId: "development", datasetLabel: "Spider2-MT" },
+  spider2_st_test: { splitId: "test", datasetLabel: "Spider2-ST" },
+  spider2_mt_test: { splitId: "test", datasetLabel: "Spider2-MT" }
+};
 
 const loadLeaderboardDataSync = () => {
   if (typeof XMLHttpRequest === "undefined") {
@@ -72,7 +88,28 @@ const getScore = (entry, taskId, metricId) => {
   return typeof value === "number" ? value : null;
 };
 
-const getSelectedTask = () => state.data.tasks.find((item) => item.id === state.taskId);
+const getTaskPresentation = (task) => taskPresentation[task.id] ?? {
+  splitId: null,
+  datasetLabel: task.shortLabel
+};
+
+const getLeaderboardTasks = () => state.data.tasks.filter((task) => task.id !== "overall");
+
+const getTasksForSelectedSplit = () => getLeaderboardTasks()
+  .filter((task) => getTaskPresentation(task).splitId === state.splitId);
+
+const getSelectedSplit = () => splitOptions.find((item) => item.id === state.splitId) ?? splitOptions[0];
+
+const getSelectedTask = () => (
+  state.data.tasks.find((item) => item.id === state.taskId) ?? getTasksForSelectedSplit()[0]
+);
+
+const ensureTaskForSplit = () => {
+  const tasks = getTasksForSelectedSplit();
+  if (!tasks.some((task) => task.id === state.taskId)) {
+    state.taskId = tasks[0]?.id ?? state.taskId;
+  }
+};
 
 const rankEntries = (entries, taskId, metricId) => {
   const rows = entries.map((entry, index) => ({
@@ -105,15 +142,35 @@ const rankEntries = (entries, taskId, metricId) => {
 
 const getSelectedMetric = () => state.data.metrics.find((item) => item.id === state.metricId);
 
+const renderSplitTabs = () => {
+  const tabs = document.querySelector("#split-tabs");
+  tabs.innerHTML = "";
+
+  splitOptions.forEach((split) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.role = "tab";
+    button.textContent = split.label;
+    button.setAttribute("aria-selected", String(split.id === state.splitId));
+    button.addEventListener("click", () => {
+      state.splitId = split.id;
+      ensureTaskForSplit();
+      render();
+    });
+    tabs.appendChild(button);
+  });
+};
+
 const renderTabs = () => {
   const tabs = document.querySelector("#task-tabs");
   tabs.innerHTML = "";
 
-  state.data.tasks.forEach((task) => {
+  getTasksForSelectedSplit().forEach((task) => {
+    const presentation = getTaskPresentation(task);
     const button = document.createElement("button");
     button.type = "button";
     button.role = "tab";
-    button.textContent = task.shortLabel;
+    button.textContent = presentation.datasetLabel;
     button.setAttribute("aria-selected", String(task.id === state.taskId));
     button.addEventListener("click", () => {
       state.taskId = task.id;
@@ -143,6 +200,7 @@ const renderMetricSelect = () => {
 
 const renderTaskSummary = () => {
   const task = getSelectedTask();
+  const split = getSelectedSplit();
   const summary = document.querySelector("#task-summary");
   const note = document.querySelector("#task-note");
 
@@ -150,7 +208,7 @@ const renderTaskSummary = () => {
     [task.unit === "conversations" ? "Conversations" : "Instances", formatNumber(task.instances), task.unit],
     ["Databases", task.databaseCount === null ? "n/a" : formatNumber(task.databaseCount), "schemas"],
     ["Avg. Tests", task.averageTests === null ? "n/a" : formatNumber(task.averageTests), "per task"],
-    ["Entries", formatNumber(state.data.entries.length), "methods"]
+    ["Split", split.label, "Table 1"]
   ];
 
   summary.innerHTML = items
@@ -235,6 +293,7 @@ const renderDatasetTable = () => {
 };
 
 const render = () => {
+  renderSplitTabs();
   renderTabs();
   renderTaskSummary();
   renderLeaderboard();
@@ -242,8 +301,10 @@ const render = () => {
 
 const hydrate = (data) => {
   state.data = data;
+  state.splitId = data.defaultSplit ?? "development";
   state.taskId = data.defaultTask;
   state.metricId = data.defaultMetric;
+  ensureTaskForSplit();
   renderMetricSelect();
   renderDatasetTable();
   render();
