@@ -4,7 +4,7 @@ const state = {
   metricId: "mean_test_pass"
 };
 
-const leaderboardDataUrl = "data/leaderboard.json?v=20260617c";
+const leaderboardDataUrl = "data/leaderboard.json?v=20260617split";
 
 const loadLeaderboardDataSync = () => {
   if (typeof XMLHttpRequest === "undefined") {

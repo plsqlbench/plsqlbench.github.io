@@ -26,8 +26,10 @@ Edit `docs/data/leaderboard.json`. Add numeric percentages under each entry's `s
   "link": "https://example.com",
   "scores": {
     "overall": { "mean_test_pass": 42.5 },
-    "spider2_st": { "mean_test_pass": 51.2, "suite_pass": 34.0 },
-    "spider2_mt": { "mean_test_pass": 24.1, "episode_pass": 8.2, "turn_suite_pass": 18.7 }
+    "spider2_st_dev": { "mean_test_pass": 51.2, "suite_pass": 34.0 },
+    "spider2_st_test": { "mean_test_pass": 52.4, "suite_pass": 35.7 },
+    "spider2_mt_dev": { "mean_test_pass": 24.1, "episode_pass": 8.2, "turn_suite_pass": 18.7 },
+    "spider2_mt_test": { "mean_test_pass": 26.3, "episode_pass": 9.1, "turn_suite_pass": 20.4 }
   }
 }
 ```

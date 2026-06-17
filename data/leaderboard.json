@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-16",
+  "updated": "2026-06-17",
   "defaultTask": "overall",
   "defaultMetric": "mean_test_pass",
   "metrics": [
@@ -33,7 +33,7 @@
       "id": "overall",
       "label": "Overall",
       "shortLabel": "Overall",
-      "description": "Aggregate PLSQLBENCH score reported in the paper.",
+      "description": "Aggregate PLSQLBENCH score across all development and test splits reported in the paper.",
       "instances": 3658,
       "unit": "instances",
       "databaseCount": 274,
@@ -42,33 +42,21 @@
       "primaryMetric": "mean_test_pass"
     },
     {
-      "id": "spider2_st",
-      "label": "Spider2-ST Test",
-      "shortLabel": "Spider2-ST",
-      "description": "Held-out Spider2-ST test split: single-turn schema-grounded PL/SQL tasks adapted from Spider 2.0 Lite.",
-      "instances": 115,
-      "unit": "instances",
-      "databaseCount": 27,
-      "averageColumns": 803.6,
-      "averageTests": 5.2,
-      "primaryMetric": "mean_test_pass"
-    },
-    {
-      "id": "spider2_mt",
-      "label": "Spider2-MT Test",
-      "shortLabel": "Spider2-MT",
-      "description": "Held-out Spider2-MT test split: multi-turn interactive workflows requiring incremental modification, debugging, and repair.",
-      "instances": 226,
-      "unit": "conversations",
-      "databaseCount": 10,
-      "averageColumns": 803.6,
-      "averageTests": 15.1,
+      "id": "mbpp",
+      "label": "MBPP Development",
+      "shortLabel": "MBPP Dev",
+      "description": "MBPP-derived function-generation tasks translated into Oracle PL/SQL; reported on the development split.",
+      "instances": 823,
+      "unit": "prompts",
+      "databaseCount": null,
+      "averageColumns": null,
+      "averageTests": 1.0,
       "primaryMetric": "mean_test_pass"
     },
     {
       "id": "spider",
-      "label": "Spider1 Dev",
-      "shortLabel": "Spider1",
+      "label": "Spider1 Development",
+      "shortLabel": "Spider1 Dev",
       "description": "Spider 1.0 SQL tasks converted into executable Oracle PL/SQL blocks; reported on the development split.",
       "instances": 970,
       "unit": "questions",
@@ -79,8 +67,8 @@
     },
     {
       "id": "stack",
-      "label": "Stack Dev",
-      "shortLabel": "Stack",
+      "label": "Stack Development",
+      "shortLabel": "Stack Dev",
       "description": "Curated procedural snippets normalized into executable schema-grounded PL/SQL tasks; reported on the development split.",
       "instances": 92,
       "unit": "questions",
@@ -90,15 +78,51 @@
       "primaryMetric": "mean_test_pass"
     },
     {
-      "id": "mbpp",
-      "label": "MBPP Dev",
-      "shortLabel": "MBPP",
-      "description": "MBPP-derived function-generation tasks translated into Oracle PL/SQL; reported on the development split.",
-      "instances": 823,
-      "unit": "prompts",
-      "databaseCount": null,
-      "averageColumns": null,
-      "averageTests": 1.0,
+      "id": "spider2_st_dev",
+      "label": "Spider2-ST Development",
+      "shortLabel": "S2-ST Dev",
+      "description": "Spider2-ST development split from Table 1: single-turn schema-grounded PL/SQL tasks adapted from Spider 2.0 Lite.",
+      "instances": 461,
+      "unit": "instances",
+      "databaseCount": 8,
+      "averageColumns": 803.6,
+      "averageTests": 5.2,
+      "primaryMetric": "mean_test_pass"
+    },
+    {
+      "id": "spider2_st_test",
+      "label": "Spider2-ST Test",
+      "shortLabel": "S2-ST Test",
+      "description": "Spider2-ST held-out test split from Table 1: single-turn schema-grounded PL/SQL tasks adapted from Spider 2.0 Lite.",
+      "instances": 115,
+      "unit": "instances",
+      "databaseCount": 27,
+      "averageColumns": 803.6,
+      "averageTests": 5.2,
+      "primaryMetric": "mean_test_pass"
+    },
+    {
+      "id": "spider2_mt_dev",
+      "label": "Spider2-MT Development",
+      "shortLabel": "S2-MT Dev",
+      "description": "Spider2-MT development split from Table 1: multi-turn interactive workflows requiring incremental modification, debugging, and repair.",
+      "instances": 971,
+      "unit": "conversations",
+      "databaseCount": 29,
+      "averageColumns": 803.6,
+      "averageTests": 15.1,
+      "primaryMetric": "mean_test_pass"
+    },
+    {
+      "id": "spider2_mt_test",
+      "label": "Spider2-MT Test",
+      "shortLabel": "S2-MT Test",
+      "description": "Spider2-MT held-out test split from Table 1: multi-turn interactive workflows requiring incremental modification, debugging, and repair.",
+      "instances": 226,
+      "unit": "conversations",
+      "databaseCount": 10,
+      "averageColumns": 803.6,
+      "averageTests": 15.1,
       "primaryMetric": "mean_test_pass"
     }
   ],
@@ -115,14 +139,9 @@
           "mean_test_pass": 51.55,
           "suite_pass": 47.45
         },
-        "spider2_st": {
-          "mean_test_pass": 57.38,
-          "suite_pass": 46.09
-        },
-        "spider2_mt": {
-          "mean_test_pass": 47.28,
-          "episode_pass": 10.98,
-          "turn_suite_pass": 36.00
+        "mbpp": {
+          "mean_test_pass": 56.38,
+          "suite_pass": 56.38
         },
         "spider": {
           "mean_test_pass": 54.85,
@@ -132,9 +151,23 @@
           "mean_test_pass": 46.56,
           "suite_pass": 40.22
         },
-        "mbpp": {
-          "mean_test_pass": 56.38,
-          "suite_pass": 56.38
+        "spider2_st_dev": {
+          "mean_test_pass": 54.47,
+          "suite_pass": 39.7
+        },
+        "spider2_st_test": {
+          "mean_test_pass": 57.38,
+          "suite_pass": 46.09
+        },
+        "spider2_mt_dev": {
+          "mean_test_pass": 43.96,
+          "episode_pass": 12.46,
+          "turn_suite_pass": 33.77
+        },
+        "spider2_mt_test": {
+          "mean_test_pass": 47.28,
+          "episode_pass": 10.98,
+          "turn_suite_pass": 36.0
         }
       }
     },
@@ -150,26 +183,35 @@
           "mean_test_pass": 48.46,
           "suite_pass": 41.52
         },
-        "spider2_st": {
-          "mean_test_pass": 51.23,
-          "suite_pass": 42.61
-        },
-        "spider2_mt": {
-          "mean_test_pass": 58.08,
-          "episode_pass": 13.41,
-          "turn_suite_pass": 44.67
+        "mbpp": {
+          "mean_test_pass": 52.13,
+          "suite_pass": 52.13
         },
         "spider": {
-          "mean_test_pass": 33.40,
-          "suite_pass": 33.40
+          "mean_test_pass": 33.4,
+          "suite_pass": 33.4
         },
         "stack": {
           "mean_test_pass": 39.13,
           "suite_pass": 36.96
         },
-        "mbpp": {
-          "mean_test_pass": 52.13,
-          "suite_pass": 52.13
+        "spider2_st_dev": {
+          "mean_test_pass": 52.23,
+          "suite_pass": 42.52
+        },
+        "spider2_st_test": {
+          "mean_test_pass": 51.23,
+          "suite_pass": 42.61
+        },
+        "spider2_mt_dev": {
+          "mean_test_pass": 53.0,
+          "episode_pass": 11.76,
+          "turn_suite_pass": 37.92
+        },
+        "spider2_mt_test": {
+          "mean_test_pass": 58.08,
+          "episode_pass": 13.41,
+          "turn_suite_pass": 44.67
         }
       }
     },
@@ -183,16 +225,11 @@
       "scores": {
         "overall": {
           "mean_test_pass": 51.32,
-          "suite_pass": 45.50
+          "suite_pass": 45.5
         },
-        "spider2_st": {
-          "mean_test_pass": 52.30,
-          "suite_pass": 39.13
-        },
-        "spider2_mt": {
-          "mean_test_pass": 51.44,
-          "episode_pass": 18.29,
-          "turn_suite_pass": 39.67
+        "mbpp": {
+          "mean_test_pass": 64.28,
+          "suite_pass": 64.28
         },
         "spider": {
           "mean_test_pass": 54.64,
@@ -202,9 +239,23 @@
           "mean_test_pass": 35.33,
           "suite_pass": 29.35
         },
-        "mbpp": {
-          "mean_test_pass": 64.28,
-          "suite_pass": 64.28
+        "spider2_st_dev": {
+          "mean_test_pass": 56.48,
+          "suite_pass": 40.13
+        },
+        "spider2_st_test": {
+          "mean_test_pass": 52.3,
+          "suite_pass": 39.13
+        },
+        "spider2_mt_dev": {
+          "mean_test_pass": 44.81,
+          "episode_pass": 11.76,
+          "turn_suite_pass": 30.85
+        },
+        "spider2_mt_test": {
+          "mean_test_pass": 51.44,
+          "episode_pass": 18.29,
+          "turn_suite_pass": 39.67
         }
       }
     },
@@ -220,14 +271,9 @@
           "mean_test_pass": 59.31,
           "suite_pass": 54.43
         },
-        "spider2_st": {
-          "mean_test_pass": 59.98,
-          "suite_pass": 46.96
-        },
-        "spider2_mt": {
-          "mean_test_pass": 59.37,
-          "episode_pass": 24.39,
-          "turn_suite_pass": 48.33
+        "mbpp": {
+          "mean_test_pass": 87.73,
+          "suite_pass": 87.73
         },
         "spider": {
           "mean_test_pass": 46.91,
@@ -237,9 +283,23 @@
           "mean_test_pass": 50.72,
           "suite_pass": 45.65
         },
-        "mbpp": {
-          "mean_test_pass": 87.73,
-          "suite_pass": 87.73
+        "spider2_st_dev": {
+          "mean_test_pass": 59.26,
+          "suite_pass": 44.9
+        },
+        "spider2_st_test": {
+          "mean_test_pass": 59.98,
+          "suite_pass": 46.96
+        },
+        "spider2_mt_dev": {
+          "mean_test_pass": 51.2,
+          "episode_pass": 16.26,
+          "turn_suite_pass": 39.15
+        },
+        "spider2_mt_test": {
+          "mean_test_pass": 59.37,
+          "episode_pass": 24.39,
+          "turn_suite_pass": 48.33
         }
       }
     },
@@ -255,26 +315,35 @@
           "mean_test_pass": 55.55,
           "suite_pass": 50.49
         },
-        "spider2_st": {
-          "mean_test_pass": 59.73,
-          "suite_pass": 46.96
-        },
-        "spider2_mt": {
-          "mean_test_pass": 54.34,
-          "episode_pass": 18.29,
-          "turn_suite_pass": 43.00
+        "mbpp": {
+          "mean_test_pass": 66.59,
+          "suite_pass": 66.59
         },
         "spider": {
-          "mean_test_pass": 56.80,
-          "suite_pass": 56.80
+          "mean_test_pass": 56.8,
+          "suite_pass": 56.8
         },
         "stack": {
           "mean_test_pass": 43.12,
           "suite_pass": 39.13
         },
-        "mbpp": {
-          "mean_test_pass": 66.59,
-          "suite_pass": 66.59
+        "spider2_st_dev": {
+          "mean_test_pass": 58.17,
+          "suite_pass": 42.95
+        },
+        "spider2_st_test": {
+          "mean_test_pass": 59.73,
+          "suite_pass": 46.96
+        },
+        "spider2_mt_dev": {
+          "mean_test_pass": 50.11,
+          "episode_pass": 13.84,
+          "turn_suite_pass": 37.64
+        },
+        "spider2_mt_test": {
+          "mean_test_pass": 54.34,
+          "episode_pass": 18.29,
+          "turn_suite_pass": 43.0
         }
       }
     },
@@ -290,14 +359,9 @@
           "mean_test_pass": 57.96,
           "suite_pass": 54.14
         },
-        "spider2_st": {
-          "mean_test_pass": 60.41,
-          "suite_pass": 50.43
-        },
-        "spider2_mt": {
-          "mean_test_pass": 55.74,
-          "episode_pass": 20.73,
-          "turn_suite_pass": 44.67
+        "mbpp": {
+          "mean_test_pass": 72.66,
+          "suite_pass": 72.66
         },
         "spider": {
           "mean_test_pass": 58.56,
@@ -307,9 +371,23 @@
           "mean_test_pass": 48.19,
           "suite_pass": 43.48
         },
-        "mbpp": {
-          "mean_test_pass": 72.66,
-          "suite_pass": 72.66
+        "spider2_st_dev": {
+          "mean_test_pass": 59.61,
+          "suite_pass": 45.55
+        },
+        "spider2_st_test": {
+          "mean_test_pass": 60.41,
+          "suite_pass": 50.43
+        },
+        "spider2_mt_dev": {
+          "mean_test_pass": 50.54,
+          "episode_pass": 12.46,
+          "turn_suite_pass": 37.45
+        },
+        "spider2_mt_test": {
+          "mean_test_pass": 55.74,
+          "episode_pass": 20.73,
+          "turn_suite_pass": 44.67
         }
       }
     },
@@ -325,26 +403,35 @@
           "mean_test_pass": 63.82,
           "suite_pass": 58.44
         },
-        "spider2_st": {
-          "mean_test_pass": 71.23,
-          "suite_pass": 60.87
-        },
-        "spider2_mt": {
-          "mean_test_pass": 65.92,
-          "episode_pass": 26.83,
-          "turn_suite_pass": 54.33
+        "mbpp": {
+          "mean_test_pass": 81.9,
+          "suite_pass": 81.9
         },
         "spider": {
-          "mean_test_pass": 56.70,
-          "suite_pass": 56.70
+          "mean_test_pass": 56.7,
+          "suite_pass": 56.7
         },
         "stack": {
           "mean_test_pass": 44.93,
           "suite_pass": 40.22
         },
-        "mbpp": {
-          "mean_test_pass": 81.90,
-          "suite_pass": 81.90
+        "spider2_st_dev": {
+          "mean_test_pass": 67.7,
+          "suite_pass": 52.49
+        },
+        "spider2_st_test": {
+          "mean_test_pass": 71.23,
+          "suite_pass": 60.87
+        },
+        "spider2_mt_dev": {
+          "mean_test_pass": 58.39,
+          "episode_pass": 17.65,
+          "turn_suite_pass": 44.15
+        },
+        "spider2_mt_test": {
+          "mean_test_pass": 65.92,
+          "episode_pass": 26.83,
+          "turn_suite_pass": 54.33
         }
       }
     },
@@ -360,14 +447,9 @@
           "mean_test_pass": 60.68,
           "suite_pass": 55.27
         },
-        "spider2_st": {
-          "mean_test_pass": 62.63,
-          "suite_pass": 52.17
-        },
-        "spider2_mt": {
-          "mean_test_pass": 63.07,
-          "episode_pass": 23.17,
-          "turn_suite_pass": 50.33
+        "mbpp": {
+          "mean_test_pass": 84.69,
+          "suite_pass": 84.69
         },
         "spider": {
           "mean_test_pass": 57.22,
@@ -377,9 +459,23 @@
           "mean_test_pass": 36.59,
           "suite_pass": 34.78
         },
-        "mbpp": {
-          "mean_test_pass": 84.69,
-          "suite_pass": 84.69
+        "spider2_st_dev": {
+          "mean_test_pass": 63.11,
+          "suite_pass": 47.51
+        },
+        "spider2_st_test": {
+          "mean_test_pass": 62.63,
+          "suite_pass": 52.17
+        },
+        "spider2_mt_dev": {
+          "mean_test_pass": 57.46,
+          "episode_pass": 17.3,
+          "turn_suite_pass": 42.83
+        },
+        "spider2_mt_test": {
+          "mean_test_pass": 63.07,
+          "episode_pass": 23.17,
+          "turn_suite_pass": 50.33
         }
       }
     }
