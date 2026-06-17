@@ -333,11 +333,12 @@ h3 {
 }
 
 .leaderboard-controls {
-  display: grid;
-  grid-template-columns: minmax(150px, 190px) minmax(0, 1fr) minmax(190px, 240px);
-  align-items: end;
-  gap: 14px;
-  padding: 16px 20px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 20px 14px;
+  background: #fbfdfc;
+  border-bottom: 1px solid var(--line);
 }
 
 .control-group {
@@ -349,18 +350,52 @@ h3 {
   width: 100%;
 }
 
+.dataset-metric-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(190px, 240px);
+  align-items: end;
+  gap: 14px;
+}
+
 .split-control,
 .dataset-control {
   width: 100%;
 }
 
+.split-control {
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
 .split-control .segmented {
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(130px, 1fr));
+  width: min(100%, 360px);
+  gap: 3px;
   overflow-x: visible;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #edf4f2;
 }
 
 .split-control .segmented button {
   flex: 1 1 0;
+  min-height: 34px;
+  border-color: transparent;
+  background: transparent;
   justify-content: center;
+  text-align: center;
+}
+
+.dataset-control .segmented {
+  flex-wrap: wrap;
+  overflow-x: visible;
+  gap: 8px;
+}
+
+.dataset-control .segmented button {
+  min-width: 88px;
   text-align: center;
 }
 
@@ -666,9 +701,14 @@ tbody tr:last-child td {
 
   .headline-stats,
   .resource-grid,
-  .leaderboard-controls,
+  .dataset-metric-row,
   .task-summary {
     grid-template-columns: 1fr;
+  }
+
+  .split-control .segmented {
+    display: grid;
+    width: 100%;
   }
 
   .leaderboard-header {
