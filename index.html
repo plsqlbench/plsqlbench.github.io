@@ -6,9 +6,9 @@
     <meta name="description" content="PLSQLBENCH leaderboard for procedural database programming over enterprise schemas.">
     <title>PLSQLBENCH</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23f8fbfa'/%3E%3Cpath d='M14 17h18c8 0 13 5 13 12s-5 12-13 12h-8v9H14V17zm10 16h7c3 0 5-2 5-4s-2-4-5-4h-7v8z' fill='%230f6f69'/%3E%3Cpath d='M41 43h9v8h-9z' fill='%23b84a5a'/%3E%3C/svg%3E">
-    <link rel="stylesheet" href="styles.css?v=20260617b">
+    <link rel="stylesheet" href="styles.css?v=20260617c">
     <script src="https://unpkg.com/lucide@latest" defer></script>
-    <script src="script.js?v=20260617b" defer></script>
+    <script src="script.js?v=20260617c" defer></script>
   </head>
   <body>
     <header class="site-header">
@@ -160,6 +160,10 @@
           </header>
 
           <div class="leaderboard-controls" aria-label="Leaderboard filters">
+            <div class="control-group dataset-control">
+              <span>Dataset</span>
+              <div id="task-tabs" class="segmented" role="tablist" aria-label="Dataset"></div>
+            </div>
             <div class="control-group metric-control">
               <span>Metric</span>
               <select id="metric-select" aria-label="Metric"></select>

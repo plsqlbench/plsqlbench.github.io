@@ -1,9 +1,10 @@
 const state = {
   data: null,
+  taskId: "overall",
   metricId: "mean_test_pass"
 };
 
-const leaderboardDataUrl = "data/leaderboard.json?v=20260617";
+const leaderboardDataUrl = "data/leaderboard.json?v=20260617c";
 
 const loadLeaderboardDataSync = () => {
   if (typeof XMLHttpRequest === "undefined") {
@@ -71,20 +72,13 @@ const getScore = (entry, taskId, metricId) => {
   return typeof value === "number" ? value : null;
 };
 
-const getTaskColumns = () => state.data.tasks;
+const getSelectedTask = () => state.data.tasks.find((item) => item.id === state.taskId);
 
-const getSortTaskId = () => (
-  state.metricId === "episode_pass" || state.metricId === "turn_suite_pass"
-    ? "spider2_mt"
-    : state.data.defaultTask
-);
-
-const rankEntries = (entries, metricId) => {
-  const sortTaskId = getSortTaskId();
+const rankEntries = (entries, taskId, metricId) => {
   const rows = entries.map((entry, index) => ({
     entry,
     index,
-    score: getScore(entry, sortTaskId, metricId),
+    score: getScore(entry, taskId, metricId),
     rank: null
   }));
 
@@ -111,6 +105,24 @@ const rankEntries = (entries, metricId) => {
 
 const getSelectedMetric = () => state.data.metrics.find((item) => item.id === state.metricId);
 
+const renderTabs = () => {
+  const tabs = document.querySelector("#task-tabs");
+  tabs.innerHTML = "";
+
+  state.data.tasks.forEach((task) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.role = "tab";
+    button.textContent = task.shortLabel;
+    button.setAttribute("aria-selected", String(task.id === state.taskId));
+    button.addEventListener("click", () => {
+      state.taskId = task.id;
+      render();
+    });
+    tabs.appendChild(button);
+  });
+};
+
 const renderMetricSelect = () => {
   const select = document.querySelector("#metric-select");
   select.innerHTML = "";
@@ -130,14 +142,14 @@ const renderMetricSelect = () => {
 };
 
 const renderTaskSummary = () => {
-  const overall = state.data.tasks.find((item) => item.id === state.data.defaultTask);
+  const task = getSelectedTask();
   const summary = document.querySelector("#task-summary");
   const note = document.querySelector("#task-note");
 
   const items = [
-    ["Instances", formatNumber(overall.instances), overall.unit],
-    ["Datasets", formatNumber(state.data.tasks.length - 1), "reported columns"],
-    ["Databases", formatNumber(overall.databaseCount), "schemas"],
+    [task.unit === "conversations" ? "Conversations" : "Instances", formatNumber(task.instances), task.unit],
+    ["Databases", task.databaseCount === null ? "n/a" : formatNumber(task.databaseCount), "schemas"],
+    ["Avg. Tests", task.averageTests === null ? "n/a" : formatNumber(task.averageTests), "per task"],
     ["Entries", formatNumber(state.data.entries.length), "methods"]
   ];
 
@@ -147,38 +159,34 @@ const renderTaskSummary = () => {
     ))
     .join("");
 
-  note.textContent = "Scores are percentages from the paper: Table 2 for Mean Test Pass@1, Table 5 for single-turn Suite Pass@1, and Table 6 for Spider2-MT strict metrics.";
+  note.textContent = `${task.description} Scores are percentages from the paper: Table 2 for Mean Test Pass@1, Table 5 for single-turn Suite Pass@1, and Table 6 for Spider2-MT strict metrics.`;
 };
 
 const renderLeaderboard = () => {
+  const task = getSelectedTask();
   const metric = getSelectedMetric();
-  const columns = getTaskColumns();
   const head = document.querySelector("#leaderboard-head");
   const body = document.querySelector("#leaderboard-body");
   const caption = document.querySelector("#table-caption");
   const updated = document.querySelector("#updated-label");
 
-  const ranked = rankEntries(state.data.entries, state.metricId);
+  const ranked = rankEntries(state.data.entries, state.taskId, state.metricId);
   const scoredCount = ranked.filter((row) => row.score !== null).length;
-  const columnBestScores = Object.fromEntries(columns.map((task) => [
-    task.id,
-    Math.max(...state.data.entries.map((entry) => getScore(entry, task.id, state.metricId) ?? -Infinity))
-  ]));
+  const bestScore = Math.max(...state.data.entries.map((entry) => getScore(entry, state.taskId, state.metricId) ?? -Infinity));
 
-  const rankBasis = columns.find((task) => task.id === getSortTaskId())?.shortLabel ?? "Overall";
-  caption.textContent = `${metric.label} by dataset (%)`;
-  updated.textContent = `${scoredCount}/${ranked.length} ranked by ${rankBasis}`;
+  caption.textContent = `${task.label} ranked by ${metric.label} (%)`;
+  updated.textContent = `${scoredCount}/${ranked.length} scored`;
 
   head.innerHTML = `
     <tr>
       <th scope="col">Rank</th>
       <th scope="col">Model</th>
-      ${columns.map((task) => `<th scope="col">${escapeHtml(task.shortLabel)}</th>`).join("")}
+      <th scope="col">Score</th>
     </tr>
   `;
 
   if (!ranked.length) {
-    body.innerHTML = `<tr><td colspan="${columns.length + 2}">No entries yet.</td></tr>`;
+    body.innerHTML = '<tr><td colspan="3">No entries yet.</td></tr>';
     return;
   }
 
@@ -188,16 +196,10 @@ const renderLeaderboard = () => {
       : escapeHtml(entry.method);
     const organization = entry.organization || entry.category || "";
     const rankLabel = rank === null ? "-" : rank;
-    const scoreCells = columns.map((task) => {
-      const taskScore = getScore(entry, task.id, state.metricId);
-      const bestScore = columnBestScores[task.id];
-      const isBest = taskScore !== null && Number.isFinite(bestScore) && taskScore === bestScore;
-      const className = `score-number${isBest ? " is-best" : ""}`;
-      const content = taskScore === null
-        ? '<span class="score-missing">n/a</span>'
-        : formatScore(taskScore);
-      return `<td class="${className}">${content}</td>`;
-    }).join("");
+    const isBest = score !== null && Number.isFinite(bestScore) && score === bestScore;
+    const scoreMarkup = score === null
+      ? '<span class="score-missing">n/a</span>'
+      : `<strong>${formatScore(score)}</strong>`;
 
     return `
       <tr>
@@ -206,13 +208,13 @@ const renderLeaderboard = () => {
           <strong>${method}</strong>
           <span>${escapeHtml(organization)}</span>
         </td>
-        ${scoreCells}
+        <td class="score-cell${isBest ? " is-best" : ""}">${scoreMarkup}</td>
       </tr>
     `;
   }).join("");
 
   if (scoredCount === 0) {
-    caption.textContent = `${metric.label} is not available for the selected leaderboard rows`;
+    caption.textContent = `${metric.label} is not reported for ${task.label}`;
   }
 };
 
@@ -233,12 +235,14 @@ const renderDatasetTable = () => {
 };
 
 const render = () => {
+  renderTabs();
   renderTaskSummary();
   renderLeaderboard();
 };
 
 const hydrate = (data) => {
   state.data = data;
+  state.taskId = data.defaultTask;
   state.metricId = data.defaultMetric;
   renderMetricSelect();
   renderDatasetTable();

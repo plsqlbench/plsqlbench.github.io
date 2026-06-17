@@ -333,8 +333,9 @@ h3 {
 }
 
 .leaderboard-controls {
-  display: flex;
-  justify-content: flex-end;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
   padding: 16px 20px 12px;
 }
 
@@ -343,7 +344,12 @@ h3 {
 }
 
 .metric-control {
+  justify-self: end;
   width: min(100%, 300px);
+}
+
+.dataset-control {
+  width: 100%;
 }
 
 .control-group > span {
@@ -462,8 +468,7 @@ table {
 }
 
 .leaderboard-table {
-  min-width: 720px;
-  table-layout: fixed;
+  min-width: 560px;
 }
 
 th,
@@ -487,28 +492,23 @@ tbody tr:last-child td {
 }
 
 .rank-cell {
-  width: 54px;
+  width: 76px;
   text-align: center;
 }
 
 .leaderboard-table th:first-child {
-  width: 54px;
+  width: 76px;
   text-align: center;
 }
 
-.leaderboard-table th:nth-child(2),
-.method-cell {
-  width: 190px;
-}
-
-.leaderboard-table th:not(:first-child):not(:nth-child(2)),
-.score-number {
-  width: 74px;
+.leaderboard-table th:last-child,
+.score-cell {
+  width: 160px;
   text-align: right;
 }
 
 .rank-cell strong {
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .method-cell strong {
@@ -523,15 +523,19 @@ tbody tr:last-child td {
   font-style: italic;
 }
 
-.score-number {
+.score-cell {
   font-variant-numeric: tabular-nums;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 900;
 }
 
-.score-number.is-best {
+.score-cell.is-best {
   background: #edf7f4;
   color: var(--teal-dark);
+}
+
+.score-cell strong {
+  display: block;
 }
 
 .score-missing {
