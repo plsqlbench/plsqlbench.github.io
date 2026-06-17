@@ -5,7 +5,7 @@ const state = {
   metricId: "mean_test_pass"
 };
 
-const leaderboardDataUrl = "data/leaderboard.json?v=20260617splitoverall";
+const leaderboardDataUrl = "data/leaderboard.json?v=20260617noscored";
 
 const splitOptions = [
   { id: "development", label: "Development" },
@@ -228,14 +228,12 @@ const renderLeaderboard = () => {
   const head = document.querySelector("#leaderboard-head");
   const body = document.querySelector("#leaderboard-body");
   const caption = document.querySelector("#table-caption");
-  const updated = document.querySelector("#updated-label");
 
   const ranked = rankEntries(state.data.entries, state.taskId, state.metricId);
   const scoredCount = ranked.filter((row) => row.score !== null).length;
   const bestScore = Math.max(...state.data.entries.map((entry) => getScore(entry, state.taskId, state.metricId) ?? -Infinity));
 
   caption.textContent = `${task.label} ranked by ${metric.label} (%)`;
-  updated.textContent = `${scoredCount}/${ranked.length} scored`;
 
   head.innerHTML = `
     <tr>
@@ -318,8 +316,6 @@ const hydrate = (data) => {
 
 const showLoadError = (error) => {
   const body = document.querySelector("#leaderboard-body");
-  const updated = document.querySelector("#updated-label");
-  updated.textContent = "Load failed";
   body.innerHTML = `<tr><td>Failed to load leaderboard data: ${escapeHtml(error.message)}</td></tr>`;
 };
 
