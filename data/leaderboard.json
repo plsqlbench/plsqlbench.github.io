@@ -1,36 +1,68 @@
 {
   "updated": "2026-08-16",
-  "defaultSplit": "test",
-  "defaultTask": "overall_test",
+  "defaultTrack": "spider2_st",
   "defaultMetric": "mean_test_pass",
   "metrics": [
-    {"id": "mean_test_pass", "label": "Mean Test Pass@1 (%)", "shortLabel": "Mean Test Pass@1", "description": "Average fraction of executable unit tests passed by one generated solution."}
+    {
+      "id": "mean_test_pass",
+      "label": "Mean Test Pass@1",
+      "description": "Average fraction of executable tests passed by one generated solution."
+    }
   ],
-  "tasks": [
-    {"id":"overall_test","label":"Overall Test Mean","shortLabel":"Overall","description":"Mean across the three held-out test sets: MBPP+, Spider2-ST, and Spider2-MT.","instances":474,"unit":"held-out instances / conversations","databaseCount":15,"averageTests":null,"primaryMetric":"mean_test_pass"},
-    {"id":"mbpp","label":"MBPP-PLSQL","shortLabel":"MBPP","description":"806 MBPP-derived PL/SQL function-generation tasks.","instances":806,"unit":"development tasks","databaseCount":null,"averageTests":1,"primaryMetric":"mean_test_pass"},
-    {"id":"spider","label":"Spider-PLSQL","shortLabel":"Spider","description":"970 Oracle-normalized Spider 1.0 tasks evaluated against gold SQL results.","instances":970,"unit":"development tasks","databaseCount":20,"averageTests":1,"primaryMetric":"mean_test_pass"},
-    {"id":"spider2_st_dev","label":"Spider2-ST (dev)","shortLabel":"S2-ST dev","description":"407 enterprise-style, schema-grounded single-turn development tasks.","instances":407,"unit":"development tasks","databaseCount":26,"averageTests":4.9,"primaryMetric":"mean_test_pass"},
-    {"id":"spider2_mt_dev","label":"Spider2-MT (dev)","shortLabel":"S2-MT dev","description":"208 multi-turn development conversations spanning 750 turns.","instances":208,"turns":750,"unit":"development conversations","databaseCount":26,"averageTests":13.7,"primaryMetric":"mean_test_pass"},
-    {"id":"mbpp_plus","label":"MBPP+-PLSQL (test)","shortLabel":"MBPP+","description":"308 held-out MBPP+-derived PL/SQL function-generation tasks with expanded tests.","instances":308,"unit":"held-out tasks","databaseCount":null,"averageTests":1,"primaryMetric":"mean_test_pass"},
-    {"id":"spider2_st_test","label":"Spider2-ST (test)","shortLabel":"S2-ST test","description":"103 database-disjoint, held-out single-turn tasks.","instances":103,"unit":"held-out tasks","databaseCount":8,"averageTests":4.7,"primaryMetric":"mean_test_pass"},
-    {"id":"spider2_mt_test","label":"Spider2-MT (test)","shortLabel":"S2-MT test","description":"63 database-disjoint, held-out conversations spanning 228 turns.","instances":63,"turns":228,"unit":"held-out conversations","databaseCount":7,"averageTests":13,"primaryMetric":"mean_test_pass"}
+  "tracks": [
+    {
+      "id": "spider2_st",
+      "label": "Spider2-ST",
+      "description": "Enterprise-style, schema-grounded single-turn PL/SQL generation and repair.",
+      "development": {"label": "Development", "taskId": "spider2_st_dev", "instances": 407, "databases": 26},
+      "test": {"label": "Test", "taskId": "spider2_st_test", "instances": 103, "databases": 8}
+    },
+    {
+      "id": "spider2_mt",
+      "label": "Spider2-MT",
+      "description": "Multi-turn interactive development, modification, debugging, and repair.",
+      "development": {"label": "Development", "taskId": "spider2_mt_dev", "instances": 208, "turns": 750, "databases": 26},
+      "test": {"label": "Test", "taskId": "spider2_mt_test", "instances": 63, "turns": 228, "databases": 7}
+    },
+    {
+      "id": "mbpp",
+      "label": "MBPP / MBPP+",
+      "description": "Function-generation tasks without persistent database tables; MBPP+ is the held-out expanded-test setting.",
+      "development": {"label": "MBPP development", "taskId": "mbpp", "instances": 806},
+      "test": {"label": "MBPP+ test", "taskId": "mbpp_plus", "instances": 308}
+    },
+    {
+      "id": "spider",
+      "label": "Spider-PLSQL",
+      "description": "Oracle-normalized Spider 1.0 tasks evaluated against gold SQL results.",
+      "development": {"label": "Development", "taskId": "spider", "instances": 970, "databases": 20},
+      "test": {"label": "Test", "taskId": null}
+    },
+    {
+      "id": "overall",
+      "label": "Overall test mean",
+      "description": "Mean across the three held-out test sets: MBPP+, Spider2-ST, and Spider2-MT.",
+      "development": {"label": "Development", "taskId": null},
+      "test": {"label": "Test mean", "taskId": "overall_test", "instances": 474, "databases": 15}
+    }
   ],
   "benchmarkComposition": [
-    {"label":"Spider2-ST","instances":"510 tasks (407 dev / 103 test)","databaseCount":34,"averageTests":"4.9 dev / 4.7 test","description":"Enterprise-style, schema-grounded single-turn PL/SQL generation and repair."},
-    {"label":"Spider2-MT","instances":"271 conversations / 978 turns","databaseCount":33,"averageTests":"13.7 dev / 13.0 test","description":"Multi-turn interactive development, modification, debugging, and repair."},
-    {"label":"Spider-PLSQL","instances":"970 tasks","databaseCount":20,"averageTests":"1.0","description":"Oracle-normalized Spider 1.0 tasks evaluated against gold SQL results."},
-    {"label":"MBPP-PLSQL","instances":"806 tasks","databaseCount":null,"averageTests":"1.0","description":"MBPP-derived PL/SQL function-generation tasks without persistent tables."},
-    {"label":"MBPP+-PLSQL","instances":"308 tasks","databaseCount":null,"averageTests":"1.0","description":"MBPP+-derived held-out function-generation tasks with expanded tests."}
+    {"label": "Spider2-ST", "instances": "510 tasks (407 dev / 103 test)", "databaseCount": 34, "averageTests": "4.9 dev / 4.7 test", "description": "Schema-grounded single-turn PL/SQL generation and repair."},
+    {"label": "Spider2-MT", "instances": "271 conversations / 978 turns", "databaseCount": 33, "averageTests": "13.7 dev / 13.0 test", "description": "Multi-turn development, modification, debugging, and repair."},
+    {"label": "Spider-PLSQL", "instances": "970 tasks", "databaseCount": 20, "averageTests": "1.0", "description": "Oracle-normalized Spider 1.0 tasks evaluated against gold SQL results."},
+    {"label": "MBPP-PLSQL", "instances": "806 tasks", "databaseCount": null, "averageTests": "1.0", "description": "MBPP-derived PL/SQL function-generation tasks."},
+    {"label": "MBPP+-PLSQL", "instances": "308 tasks", "databaseCount": null, "averageTests": "1.0", "description": "Held-out MBPP+-derived tasks with expanded tests."}
   ],
   "entries": [
-    {"method":"Llama-4-Maverick","organization":"Direct generation","category":"Open-weight","date":"2026-08-16","setting":"Direct generation","link":"","scores":{"overall_test":{"mean_test_pass":46.80},"mbpp":{"mean_test_pass":57.82},"spider":{"mean_test_pass":75.46},"spider2_st_dev":{"mean_test_pass":60.10},"spider2_mt_dev":{"mean_test_pass":48.38},"mbpp_plus":{"mean_test_pass":26.30},"spider2_st_test":{"mean_test_pass":61.24},"spider2_mt_test":{"mean_test_pass":52.85}}},
-    {"method":"Gemma-4-31B","organization":"Direct generation","category":"Open-weight","date":"2026-08-16","setting":"Direct generation","link":"","scores":{"overall_test":{"mean_test_pass":62.26},"mbpp":{"mean_test_pass":80.40},"spider":{"mean_test_pass":81.44},"spider2_st_dev":{"mean_test_pass":73.90},"spider2_mt_dev":{"mean_test_pass":67.90},"mbpp_plus":{"mean_test_pass":39.94},"spider2_st_test":{"mean_test_pass":76.26},"spider2_mt_test":{"mean_test_pass":70.57}}},
-    {"method":"Gemini-2.5-Flash-Lite","organization":"Direct generation","category":"Proprietary","date":"2026-08-16","setting":"Direct generation","link":"","scores":{"overall_test":{"mean_test_pass":50.39},"mbpp":{"mean_test_pass":63.77},"spider":{"mean_test_pass":73.92},"spider2_st_dev":{"mean_test_pass":60.99},"spider2_mt_dev":{"mean_test_pass":50.16},"mbpp_plus":{"mean_test_pass":33.44},"spider2_st_test":{"mean_test_pass":60.94},"spider2_mt_test":{"mean_test_pass":56.78}}},
-    {"method":"Grok-4.3","organization":"Direct generation","category":"Proprietary","date":"2026-08-16","setting":"Direct generation","link":"","scores":{"overall_test":{"mean_test_pass":56.92},"mbpp":{"mean_test_pass":87.59},"spider":{"mean_test_pass":64.95},"spider2_st_dev":{"mean_test_pass":67.28},"spider2_mt_dev":{"mean_test_pass":63.45},"mbpp_plus":{"mean_test_pass":38.31},"spider2_st_test":{"mean_test_pass":66.98},"spider2_mt_test":{"mean_test_pass":65.46}}},
-    {"method":"GPT-5.4-Mini","organization":"Direct generation","category":"Proprietary","date":"2026-08-16","setting":"Direct generation","link":"","scores":{"overall_test":{"mean_test_pass":58.60},"mbpp":{"mean_test_pass":70.35},"spider":{"mean_test_pass":76.60},"spider2_st_dev":{"mean_test_pass":63.14},"spider2_mt_dev":{"mean_test_pass":61.29},"mbpp_plus":{"mean_test_pass":38.96},"spider2_st_test":{"mean_test_pass":70.90},"spider2_mt_test":{"mean_test_pass":65.94}}},
-    {"method":"GPT-5.4","organization":"Direct generation","category":"Proprietary","date":"2026-08-16","setting":"Direct generation","link":"","scores":{"overall_test":{"mean_test_pass":64.96},"mbpp":{"mean_test_pass":83.75},"spider":{"mean_test_pass":78.45},"spider2_st_dev":{"mean_test_pass":74.35},"spider2_mt_dev":{"mean_test_pass":69.08},"mbpp_plus":{"mean_test_pass":42.21},"spider2_st_test":{"mean_test_pass":79.47},"spider2_mt_test":{"mean_test_pass":73.19}}},
-    {"method":"GPT-5.6-Sol","organization":"Direct generation","category":"Proprietary","date":"2026-08-16","setting":"Direct generation","link":"","scores":{"overall_test":{"mean_test_pass":61.71},"mbpp":{"mean_test_pass":96.28},"spider":{"mean_test_pass":79.59},"spider2_st_dev":{"mean_test_pass":61.77},"spider2_mt_dev":{"mean_test_pass":64.69},"mbpp_plus":{"mean_test_pass":46.75},"spider2_st_test":{"mean_test_pass":71.57},"spider2_mt_test":{"mean_test_pass":66.81}}},
-    {"method":"Claude-Opus-4.8","organization":"Direct generation","category":"Proprietary","date":"2026-08-16","setting":"Direct generation","link":"","scores":{"overall_test":{"mean_test_pass":63.49},"mbpp":{"mean_test_pass":90.32},"spider":{"mean_test_pass":84.33},"spider2_st_dev":{"mean_test_pass":73.92},"spider2_mt_dev":{"mean_test_pass":65.52},"mbpp_plus":{"mean_test_pass":47.73},"spider2_st_test":{"mean_test_pass":76.34},"spider2_mt_test":{"mean_test_pass":66.40}}}
+    {"method": "Llama-4-Maverick", "organization": "Direct generation", "category": "Open-weight", "scores": {"mbpp": 57.82, "spider": 75.46, "spider2_st_dev": 60.10, "spider2_mt_dev": 48.38, "mbpp_plus": 26.30, "spider2_st_test": 61.24, "spider2_mt_test": 52.85, "overall_test": 46.80}},
+    {"method": "Gemma-4-31B", "organization": "Direct generation", "category": "Open-weight", "scores": {"mbpp": 80.40, "spider": 81.44, "spider2_st_dev": 73.90, "spider2_mt_dev": 67.90, "mbpp_plus": 39.94, "spider2_st_test": 76.26, "spider2_mt_test": 70.57, "overall_test": 62.26}},
+    {"method": "Gemini-2.5-Flash-Lite", "organization": "Direct generation", "category": "Proprietary", "scores": {"mbpp": 63.77, "spider": 73.92, "spider2_st_dev": 60.99, "spider2_mt_dev": 50.16, "mbpp_plus": 33.44, "spider2_st_test": 60.94, "spider2_mt_test": 56.78, "overall_test": 50.39}},
+    {"method": "Grok-4.3", "organization": "Direct generation", "category": "Proprietary", "scores": {"mbpp": 87.59, "spider": 64.95, "spider2_st_dev": 67.28, "spider2_mt_dev": 63.45, "mbpp_plus": 38.31, "spider2_st_test": 66.98, "spider2_mt_test": 65.46, "overall_test": 56.92}},
+    {"method": "GPT-5.4-Mini", "organization": "Direct generation", "category": "Proprietary", "scores": {"mbpp": 70.35, "spider": 76.60, "spider2_st_dev": 63.14, "spider2_mt_dev": 61.29, "mbpp_plus": 38.96, "spider2_st_test": 70.90, "spider2_mt_test": 65.94, "overall_test": 58.60}},
+    {"method": "GPT-5.4", "organization": "Direct generation", "category": "Proprietary", "scores": {"mbpp": 83.75, "spider": 78.45, "spider2_st_dev": 74.35, "spider2_mt_dev": 69.08, "mbpp_plus": 42.21, "spider2_st_test": 79.47, "spider2_mt_test": 73.19, "overall_test": 64.96}},
+    {"method": "GPT-5.6-Sol", "organization": "Direct generation", "category": "Proprietary", "scores": {"mbpp": 96.28, "spider": 79.59, "spider2_st_dev": 61.77, "spider2_mt_dev": 64.69, "mbpp_plus": 46.75, "spider2_st_test": 71.57, "spider2_mt_test": 66.81, "overall_test": 61.71}},
+    {"method": "Claude-Opus-4.8", "organization": "Direct generation", "category": "Proprietary", "scores": {"mbpp": 90.32, "spider": 84.33, "spider2_st_dev": 73.92, "spider2_mt_dev": 65.52, "mbpp_plus": 47.73, "spider2_st_test": 76.34, "spider2_mt_test": 66.40, "overall_test": 63.49}},
+    {"method": "GPT-5.4-Mini + Codex DB Agent", "organization": "Tool-augmented agent · medium reasoning", "category": "Agentic", "scores": {"spider2_st_dev": 75.36, "spider2_mt_dev": 70.21, "mbpp_plus": 45.13, "spider2_st_test": 77.80, "spider2_mt_test": 75.72}},
+    {"method": "GPT-5.6-Sol + Codex DB Agent", "organization": "Tool-augmented agent · medium reasoning", "category": "Agentic", "scores": {"spider2_st_dev": 77.53, "spider2_mt_dev": 73.94, "mbpp_plus": 46.10, "spider2_st_test": 83.56, "spider2_mt_test": 81.29}}
   ]
 }

@@ -323,6 +323,11 @@ h3 {
   width: 100%;
 }
 
+.metric-control.is-fixed select {
+  cursor: not-allowed;
+  opacity: 0.68;
+}
+
 .dataset-metric-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(190px, 240px);
@@ -422,7 +427,7 @@ select {
 
 .task-summary {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   padding: 0 20px 12px;
 }
@@ -446,7 +451,7 @@ select {
 .summary-item strong {
   display: block;
   margin-top: 3px;
-  font-size: 21px;
+  font-size: 16px;
   line-height: 1.05;
 }
 
@@ -524,8 +529,17 @@ tbody tr:last-child td {
 
 .leaderboard-table th:last-child,
 .score-cell {
-  width: 160px;
+  width: 130px;
   text-align: right;
+}
+
+.comparison-head,
+.comparison-test {
+  border-left: 1px solid var(--line);
+}
+
+.comparison-test {
+  background: #f8fbfa;
 }
 
 .rank-cell strong {
