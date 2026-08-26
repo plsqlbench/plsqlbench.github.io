@@ -6,9 +6,9 @@
     <meta name="description" content="PLSQLBENCH leaderboard for procedural database programming over enterprise schemas.">
     <title>PLSQLBENCH</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23f8fbfa'/%3E%3Cpath d='M14 17h18c8 0 13 5 13 12s-5 12-13 12h-8v9H14V17zm10 16h7c3 0 5-2 5-4s-2-4-5-4h-7v8z' fill='%230f6f69'/%3E%3Cpath d='M41 43h9v8h-9z' fill='%23b84a5a'/%3E%3C/svg%3E">
-    <link rel="stylesheet" href="styles.css?v=20260617noscored">
+    <link rel="stylesheet" href="styles.css?v=20260816paper">
     <script src="https://unpkg.com/lucide@latest" defer></script>
-    <script src="script.js?v=20260617notable1" defer></script>
+    <script src="script.js?v=20260816paper" defer></script>
   </head>
   <body>
     <header class="site-header">
@@ -31,20 +31,20 @@
           <p class="eyebrow">Execution-based procedural database programming benchmark</p>
           <h1 id="page-title">PLSQLBENCH</h1>
           <p class="subtitle">
-            Evaluating language models on executable PL/SQL programs over enterprise-style schemas,
-            from single-turn generation to multi-turn debugging and repair.
+            The first benchmark for evaluating whether LLM systems can write executable PL/SQL programs,
+            from single-turn generation to multi-turn modification, debugging, and repair.
           </p>
           <div class="headline-stats" aria-label="Benchmark summary">
             <div>
-              <strong>3,658</strong>
+              <strong>2,865</strong>
               <span>instances</span>
             </div>
             <div>
-              <strong>3,274</strong>
-              <span>user turns</span>
+              <strong>978</strong>
+              <span>turns</span>
             </div>
             <div>
-              <strong>274</strong>
+              <strong>54</strong>
               <span>databases</span>
             </div>
           </div>
@@ -58,9 +58,9 @@
           <section class="info-block" id="about" aria-labelledby="about-title">
             <h2 id="about-title">About PLSQLBENCH</h2>
             <p>
-              PLSQLBENCH is an evaluation framework for procedural database programming. It
-              tests whether models can write PL/SQL artifacts that compile, execute, query
-              database state correctly, and pass task-specific unit tests.
+              PLSQLBENCH evaluates whether models can write executable PL/SQL programs. It combines
+              schema-grounded database tasks and procedural programming problems, with correctness
+              measured by execution-based tests.
             </p>
             <div class="resource-grid" aria-label="Project resources">
               <a class="resource-button" href="#leaderboard">
@@ -71,7 +71,7 @@
                 <i data-lucide="database" aria-hidden="true"></i>
                 <span>Dataset</span>
               </a>
-              <a class="resource-button" href="https://linux-git.oraclecorp.com/menglliu/plsqlbench" target="_blank" rel="noreferrer">
+              <a class="resource-button" href="https://github.com/oracle-samples/plsqlbench" target="_blank" rel="noreferrer">
                 <i data-lucide="code-2" aria-hidden="true"></i>
                 <span>Code</span>
               </a>
@@ -85,21 +85,21 @@
           <section class="info-block" aria-labelledby="status-title">
             <h2 id="status-title">Status</h2>
             <div class="status-list">
-              <p><strong>Baseline evals reported</strong></p>
+              <p><strong>Official paper results</strong></p>
+              <p><a href="https://arxiv.org/abs/2608.15931" target="_blank" rel="noreferrer">Read the paper on arXiv</a></p>
             </div>
           </section>
 
           <section class="info-block" id="benchmark" aria-labelledby="benchmark-title">
             <h2 id="benchmark-title">Why PLSQLBENCH?</h2>
             <p>
-              Production database work is not only standalone SQL. It includes reusable
-              database-resident programs that validate records, coordinate transactions,
-              handle exceptions, and run scheduled jobs.
+              Procedural database programming goes beyond standalone SQL, combining database logic
+              with control flow, cursors, exception handling, and reusable program units.
             </p>
             <ul class="compact-list">
-              <li><strong>Executable artifacts:</strong> procedures, functions, packages, triggers, cursors, and dynamic SQL.</li>
-              <li><strong>Enterprise schemas:</strong> broad table sets and realistic database objects.</li>
-              <li><strong>Multi-turn workflows:</strong> later turns add requirements, repair failures, or change business rules.</li>
+              <li><strong>Executable artifacts:</strong> procedures, functions, packages, cursors, object types, and dynamic SQL.</li>
+              <li><strong>Schema grounding:</strong> enterprise-style Spider 2 and Spider schemas normalized to Oracle.</li>
+              <li><strong>Multi-turn workflows:</strong> extensions, modifications, debugging, and repair under accumulated context.</li>
             </ul>
 
             <div class="table-scroll compact-table">
@@ -107,7 +107,7 @@
                 <thead>
                   <tr>
                     <th scope="col">Subset</th>
-                    <th scope="col">Instances</th>
+                    <th scope="col">Instances / split</th>
                     <th scope="col">DBs</th>
                     <th scope="col">Avg. Tests</th>
                     <th scope="col">Focus</th>
@@ -121,27 +121,29 @@
           <section class="info-block" id="evaluation" aria-labelledby="evaluation-title">
             <h2 id="evaluation-title">Evaluation Protocol</h2>
             <ol class="protocol-list">
-              <li><strong>Generate:</strong> models receive a natural-language request and Oracle-dialect schema context.</li>
-              <li><strong>Compile and run:</strong> generated artifacts execute against benchmark schemas.</li>
-              <li><strong>Score tests:</strong> unit tests compare outputs, table-state changes, exceptions, and diagnostics.</li>
+              <li><strong>Generate:</strong> models receive a natural-language request, Oracle-dialect schema context, and requirements.</li>
+              <li><strong>Compile and run:</strong> generated artifacts execute in isolated benchmark environments.</li>
+              <li><strong>Score tests:</strong> executable tests compare outputs and behavior with a reference program or gold SQL result.</li>
             </ol>
           </section>
 
           <section class="info-block" id="submission" aria-labelledby="submission-title">
             <h2 id="submission-title">Submission Format</h2>
             <p>
-              Submit one JSONL row per generated answer. Include model metadata, task identifiers,
-              generated PL/SQL, and optional run telemetry.
+              The public benchmark repository contains the released harness, evaluation instructions,
+              and reproduction workflow for direct generation and tool-augmented agents.
             </p>
-            <pre class="code-block"><code>{"instance_id":"spider2_singleturn_0001","model":"your-system","generated_plsql":"CREATE OR REPLACE PROCEDURE ...","latency_seconds":8.5}
-{"conversation_id":"plsql-multiturn-0732","turn_index":2,"model":"your-system","generated_plsql":"CREATE OR REPLACE PACKAGE ..."}</code></pre>
+            <pre class="code-block"><code>git clone https://github.com/oracle-samples/plsqlbench
+cd plsqlbench
+# See the repository README for the released harness and submission workflow.</code></pre>
           </section>
 
           <section class="info-block" id="citation" aria-labelledby="citation-title">
             <h2 id="citation-title">Citation</h2>
-            <pre class="code-block"><code>@inproceedings{plsqlbench2026,
-  title = {PLSQLBENCH: Benchmarking Procedural Database Programming over Enterprise Schemas},
-  author = {Anonymous},
+            <pre class="code-block"><code>@article{liu2026plsqlbench,
+  title = {PLSQLBench: Benchmarking LLM Systems for Executable Procedural Database Programming},
+  author = {Liu, Marianne Menglin and Boytsov, Leonid and Peterson, Daniel W. and others},
+  journal = {arXiv preprint arXiv:2608.15931},
   year = {2026}
 }</code></pre>
           </section>
@@ -185,7 +187,7 @@
 
     <footer class="footer">
       <span>PLSQLBENCH</span>
-      <span>Execution-based PL/SQL benchmark</span>
+      <span>Execution-based procedural database programming benchmark</span>
     </footer>
   </body>
 </html>

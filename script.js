@@ -5,7 +5,7 @@ const state = {
   metricId: "mean_test_pass"
 };
 
-const leaderboardDataUrl = "data/leaderboard.json?v=20260617notable1";
+const leaderboardDataUrl = "data/leaderboard.json?v=20260816paper";
 
 const splitOptions = [
   { id: "development", label: "Development" },
@@ -13,13 +13,12 @@ const splitOptions = [
 ];
 
 const taskPresentation = {
-  development_overall: { splitId: "development", datasetLabel: "Overall" },
+  overall_test: { splitId: "test", datasetLabel: "Overall" },
   mbpp: { splitId: "development", datasetLabel: "MBPP" },
   spider: { splitId: "development", datasetLabel: "Spider1" },
-  stack: { splitId: "development", datasetLabel: "Stack" },
   spider2_st_dev: { splitId: "development", datasetLabel: "Spider2-ST" },
   spider2_mt_dev: { splitId: "development", datasetLabel: "Spider2-MT" },
-  test_overall: { splitId: "test", datasetLabel: "Overall" },
+  mbpp_plus: { splitId: "test", datasetLabel: "MBPP+" },
   spider2_st_test: { splitId: "test", datasetLabel: "Spider2-ST" },
   spider2_mt_test: { splitId: "test", datasetLabel: "Spider2-MT" }
 };
@@ -207,7 +206,7 @@ const renderTaskSummary = () => {
   const note = document.querySelector("#task-note");
 
   const items = [
-    [task.unit === "conversations" ? "Conversations" : "Instances", formatNumber(task.instances), task.unit],
+    [task.unit.includes("conversations") ? "Conversations" : "Instances", formatNumber(task.instances), task.unit],
     ["Databases", task.databaseCount === null ? "n/a" : formatNumber(task.databaseCount), "schemas"],
     ["Avg. Tests", task.averageTests === null ? "n/a" : formatNumber(task.averageTests), "per task"],
     ["Split", split.label, ""]
@@ -219,7 +218,7 @@ const renderTaskSummary = () => {
     ))
     .join("");
 
-  note.textContent = `${task.description} Scores are percentages from the paper: Table 2 for Mean Test Pass@1, Table 5 for single-turn Suite Pass@1, and Table 6 for Spider2-MT strict metrics.`;
+  note.textContent = `${task.description} Scores are Mean Test Pass@1 percentages from Table 2 of the paper.`;
 };
 
 const renderLeaderboard = () => {
@@ -278,14 +277,13 @@ const renderLeaderboard = () => {
 
 const renderDatasetTable = () => {
   const body = document.querySelector("#dataset-body");
-  body.innerHTML = state.data.tasks
-    .filter((task) => !["overall", "development_overall", "test_overall"].includes(task.id))
+  body.innerHTML = state.data.benchmarkComposition
     .map((task) => `
       <tr>
         <td><strong>${task.label}</strong></td>
-        <td>${formatNumber(task.instances)} ${task.turns ? `conversations / ${formatNumber(task.turns)} turns` : task.unit}</td>
+        <td>${task.instances}</td>
         <td>${task.databaseCount === null ? "n/a" : formatNumber(task.databaseCount)}</td>
-        <td>${task.averageTests === null ? "n/a" : formatNumber(task.averageTests)}</td>
+        <td>${task.averageTests}</td>
         <td>${escapeHtml(task.description)}</td>
       </tr>
     `)
