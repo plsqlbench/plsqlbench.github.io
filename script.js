@@ -47,28 +47,6 @@ const renderTabs = () => {
   });
 };
 
-const renderMetricSelect = () => {
-  const select = document.querySelector("#metric-select");
-  const group = select.closest(".metric-control");
-  select.innerHTML = "";
-  state.data.metrics.forEach((metric) => {
-    const option = document.createElement("option");
-    option.value = metric.id;
-    option.textContent = metric.label;
-    select.appendChild(option);
-  });
-  select.value = state.metricId;
-  select.disabled = state.data.metrics.length <= 1;
-  select.setAttribute("aria-disabled", String(select.disabled));
-  group.classList.toggle("is-fixed", select.disabled);
-  if (!select.disabled) {
-    select.addEventListener("change", (event) => {
-      state.metricId = event.target.value;
-      render();
-    });
-  }
-};
-
 const formatSetting = (setting) => {
   if (!setting.taskId) return "Not reported";
   const scale = setting.turns
@@ -138,7 +116,6 @@ const init = async () => {
   state.data = await response.json();
   state.trackId = state.data.defaultTrack;
   state.metricId = state.data.defaultMetric;
-  renderMetricSelect();
   renderDatasetTable();
   render();
   if (window.lucide) window.lucide.createIcons();
